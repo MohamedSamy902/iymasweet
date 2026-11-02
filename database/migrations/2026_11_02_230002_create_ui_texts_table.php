@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('ui_texts', function (Blueprint $table) {
+            $table->id();
+            $table->string('group')->index();
+            $table->string('key');
+            $table->text('value_ar');
+            $table->text('value_en')->nullable();
+            $table->timestamps();
+
+            $table->unique(['group', 'key']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('ui_texts');
+    }
+};
