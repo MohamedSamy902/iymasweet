@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\CartService;
 use App\Services\SettingsService;
 use App\Services\UiTextService;
 use Illuminate\Http\Request;
@@ -19,6 +20,13 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $locale = app()->getLocale();
+        $cartCount = 0;
+
+        try {
+            $cartCount = app(CartService::class)->summary(app(CartService::class)->resolve())['count'] ?? 0;
+        } catch (\Throwable) {
+            $cartCount = 0;
+        }
 
         return [
             ...parent::share($request),
@@ -37,7 +45,7 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
-            'cartCount' => 0,
+            'cartCount' => $cartCount,
         ];
     }
 }

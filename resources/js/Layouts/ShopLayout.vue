@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Home, ShoppingBag, ShoppingCart, UserRound, ClipboardList } from '@lucide/vue';
 import { useUiText } from '@/Composables/useUiText';
+import ChatWidget from '@/Components/Chatbot/ChatWidget.vue';
 
 const page = usePage();
 const { t } = useUiText();
@@ -106,6 +107,18 @@ const navItems = computed(() => [
                 </p>
             </div>
         </footer>
+
+        <ChatWidget />
+
+        <div
+            v-if="cartCount > 0"
+            class="fixed inset-x-3 bottom-[4.5rem] z-40 rounded-2xl bg-[var(--color-brown)] px-4 py-3 text-sm text-white shadow-lg md:hidden"
+        >
+            <Link href="/checkout" class="flex items-center justify-between font-semibold">
+                <span>{{ cartCount }} منتجات</span>
+                <span>{{ t('layout.cart_continue', 'كمّل الطلب') }}</span>
+            </Link>
+        </div>
 
         <!-- Mobile bottom nav -->
         <nav

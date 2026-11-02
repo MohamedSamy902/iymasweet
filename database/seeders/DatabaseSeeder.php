@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             SettingsSeeder::class,
             UiTextsSeeder::class,
+            CatalogSeeder::class,
+            CommerceSeeder::class,
+            ContentSeeder::class,
         ]);
     }
 }

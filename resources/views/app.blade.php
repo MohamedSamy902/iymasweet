@@ -24,6 +24,9 @@
     </style>
 
     <link rel="icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="/images/logo-placeholder.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @inertiaHead
