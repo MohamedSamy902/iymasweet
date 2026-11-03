@@ -11,7 +11,6 @@ const { t } = useUiText();
 const settings = computed(() => page.props.settings || {});
 const brand = computed(() => settings.value.brand || {});
 const announcement = computed(() => settings.value.announcement || {});
-const showSparkles = computed(() => settings.value.features?.show_sparkles !== false);
 const cartCount = computed(() => page.props.cartCount || 0);
 const locale = computed(() => page.props.locale || 'ar');
 
@@ -37,14 +36,13 @@ const navItems = computed(() => [
             <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
                 <Link href="/" class="flex min-w-0 items-center gap-2">
                     <div
-                        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-primary-soft)] text-lg font-heading text-[var(--color-primary-dark)] shadow-sm"
+                        class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--color-primary-soft)] shadow-sm"
                     >
-                        ✦
+                        <img src="/images/products/donut-1.jpg" alt="" class="h-full w-full object-cover" />
                     </div>
                     <div class="min-w-0 leading-tight">
                         <div class="truncate font-heading text-xl text-[var(--color-brown)]">
                             {{ brand.name || 'Iyma Sweet' }}
-                            <span v-if="showSparkles" class="sparkle text-sm">✦</span>
                         </div>
                         <div class="truncate text-xs text-[var(--color-text-muted)]">
                             {{ brand.tagline || 'Handmade with love' }}
@@ -92,16 +90,36 @@ const navItems = computed(() => [
             <slot />
         </main>
 
-        <footer class="mt-16 border-t border-[var(--color-primary-soft)] bg-white/70">
-            <div class="mx-auto max-w-6xl px-4 py-10">
-                <div class="font-heading text-2xl text-[var(--color-brown)]">
-                    {{ brand.name || 'Iyma Sweet' }}
+        <footer class="mt-16 border-t border-[var(--color-primary-soft)] bg-white/85">
+            <div class="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
+                <div>
+                    <div class="font-heading text-2xl text-[var(--color-brown)]">
+                        {{ brand.name || 'Iyma Sweet' }}
+                    </div>
+                    <p class="mt-2 max-w-md text-sm leading-relaxed text-[var(--color-text)]">
+                        {{ t('layout.footer_blurb', 'حلويات منزلية طازجة، توصيل لباب البيت.') }}
+                    </p>
+                    <p class="mt-2 text-xs font-semibold text-[var(--color-primary-dark)]">
+                        {{ brand.tagline || 'Handmade with love' }}
+                    </p>
                 </div>
-                <p class="mt-2 max-w-md text-sm text-[var(--color-text-muted)]">
-                    {{ brand.tagline || 'Handmade with love' }}
-                </p>
-                <div class="rainbow-divider mt-6" />
-                <p class="mt-4 text-xs text-[var(--color-text-muted)]">
+                <div class="space-y-2 text-sm">
+                    <div class="font-semibold text-[var(--color-brown)]">روابط سريعة</div>
+                    <Link href="/shop" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">{{ t('layout.nav_shop', 'المنيو') }}</Link>
+                    <Link href="/bundles" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">{{ t('layout.nav_bundles', 'البوكسات') }}</Link>
+                    <Link href="/faq" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">أسئلة شائعة</Link>
+                    <Link href="/contact" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">تواصل معنا</Link>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="font-semibold text-[var(--color-brown)]">سياسات</div>
+                    <Link href="/shipping" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">الدفع والتوصيل</Link>
+                    <Link href="/refund" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">الإلغاء والاسترجاع</Link>
+                    <Link href="/privacy" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">الخصوصية</Link>
+                    <Link href="/terms" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">الشروط</Link>
+                </div>
+            </div>
+            <div class="border-t border-black/5">
+                <p class="mx-auto max-w-6xl px-4 py-4 text-xs text-[var(--color-text-muted)]">
                     © {{ new Date().getFullYear() }} {{ brand.name || 'Iyma Sweet' }} ·
                     {{ t('layout.footer_rights', 'جميع الحقوق محفوظة') }}
                 </p>

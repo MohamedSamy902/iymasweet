@@ -35,7 +35,10 @@ const tabs = computed(() => [
     <Head :title="brand.name || 'Iyma Sweet'" />
 
     <section class="relative overflow-hidden border-b border-[var(--color-primary-soft)]/60">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,var(--color-primary-soft),transparent_45%),radial-gradient(circle_at_85%_10%,var(--color-denim-soft),transparent_40%),linear-gradient(180deg,#fff8fb_0%,#ffffff_70%)]" />
+        <div class="absolute inset-0">
+            <img src="/images/products/hero-pastry.jpg" alt="" class="h-full w-full object-cover opacity-[0.22]" />
+            <div class="absolute inset-0 bg-gradient-to-l from-[#fffaf7] via-[#fffaf7]/92 to-[#fffaf7]/70" />
+        </div>
         <div class="relative mx-auto max-w-6xl px-4 pb-14 pt-12 md:pb-20 md:pt-16">
             <div class="max-w-xl animate-fade-up space-y-5">
                 <p class="text-sm font-semibold tracking-wide text-[var(--color-primary-dark)]">
@@ -44,7 +47,7 @@ const tabs = computed(() => [
                 <h1 class="font-heading text-5xl leading-[1.05] text-[var(--color-brown)] md:text-6xl">
                     {{ brand.name || 'Iyma Sweet' }}
                 </h1>
-                <p class="max-w-md text-base leading-relaxed text-[var(--color-text-muted)] md:text-lg">
+                <p class="max-w-md text-base leading-relaxed text-[var(--color-text)] md:text-lg">
                     {{ t('home.hero_subtitle') }}
                 </p>
                 <div class="flex flex-wrap gap-3 pt-1">
@@ -105,8 +108,8 @@ const tabs = computed(() => [
                 <Link href="/bundles" class="text-sm font-semibold text-[var(--color-denim)]">{{ t('common.see_all') }}</Link>
             </div>
             <div class="grid gap-3 md:grid-cols-3">
-                <Link v-for="b in bundles" :key="b.slug" :href="`/bundle/${b.slug}`" class="rounded-3xl bg-white p-4 shadow-sm">
-                    <img :src="b.image || '/images/logo-placeholder.svg'" class="mb-3 aspect-video w-full rounded-2xl object-cover" alt="" />
+                <Link v-for="b in bundles" :key="b.slug" :href="`/bundle/${b.slug}`" class="surface-card p-4 transition hover:-translate-y-0.5">
+                    <img :src="b.image || '/images/products/box-1.jpg'" class="mb-3 aspect-video w-full rounded-xl object-cover" alt="" />
                     <div class="font-semibold">{{ b.name_ar }}</div>
                     <div class="font-bold text-[var(--color-primary-dark)]">{{ b.price }} ج.م</div>
                 </Link>

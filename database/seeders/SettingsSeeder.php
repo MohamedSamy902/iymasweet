@@ -39,8 +39,8 @@ class SettingsSeeder extends Seeder
 
         $settings->set('theme', 'show_sparkles', true, 'boolean');
         $settings->set('theme', 'border_radius', '1.5rem', 'string');
-        $settings->set('theme', 'heading_font', 'Baloo Bhaijaan 2', 'string');
-        $settings->set('theme', 'body_font', 'Cairo', 'string');
+        $settings->set('theme', 'heading_font', 'Cairo', 'string');
+        $settings->set('theme', 'body_font', 'Tajawal', 'string');
 
         $settings->set('store', 'guest_checkout', true, 'boolean');
         $settings->set('store', 'closed', false, 'boolean');

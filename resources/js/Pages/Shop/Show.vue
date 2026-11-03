@@ -3,6 +3,8 @@ import { computed, reactive, ref } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import ShopLayout from '@/Layouts/ShopLayout.vue';
 import ProductCard from '@/Components/Product/ProductCard.vue';
+import ProductGallery from '@/Components/Product/ProductGallery.vue';
+import FormField from '@/Components/Form/FormField.vue';
 import { useUiText } from '@/Composables/useUiText';
 
 defineOptions({ layout: ShopLayout });
@@ -53,55 +55,109 @@ const notify = () => {
 <template>
     <Head :title="product.name_ar" />
     <div class="mx-auto max-w-6xl px-4 py-6 pb-28">
-        <div class="grid gap-8 md:grid-cols-2">
-            <div class="overflow-hidden rounded-[2rem] bg-white shadow-sm">
-                <img :src="product.images?.[0]?.path || '/images/logo-placeholder.svg'" class="aspect-square w-full object-cover" :alt="product.name_ar" />
-            </div>
-            <div class="space-y-4">
+        <div class="grid gap-8 md:grid-cols-2 md:items-start">
+            <ProductGallery :media="product.images || []" :alt="product.name_ar" />
+
+            <div class="space-y-5">
                 <div class="text-sm text-[var(--color-text-muted)]">
-                    <Link href="/shop">{{ t('shop.title') }}</Link>
+                    <Link href="/shop" class="hover:text-[var(--color-denim)]">{{ t('shop.title') }}</Link>
                     <span v-if="product.category"> / {{ product.category.name_ar }}</span>
                 </div>
-                <h1 class="font-heading text-3xl text-[var(--color-brown)]">{{ product.name_ar }}</h1>
-                <div class="flex items-center gap-3">
-                    <span class="rounded-full bg-[var(--color-primary-soft)] px-3 py-1 text-xs font-bold">{{ product.availability_label }}</span>
-                    <span class="text-sm">★ {{ product.avg_rating }} ({{ product.ratings_count }})</span>
+                <h1 class="font-heading text-3xl text-[var(--color-brown)] md:text-4xl">{{ product.name_ar }}</h1>
+                <p v-if="product.short_description_ar" class="text-[var(--color-text-muted)]">{{ product.short_description_ar }}</p>
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="rounded-full bg-[var(--color-primary-soft)] px-3 py-1 text-xs font-bold text-[var(--color-primary-dark)]">
+                        {{ product.availability_label }}
+                    </span>
+                    <span class="text-sm text-[var(--color-text-muted)]">★ {{ product.avg_rating }} ({{ product.ratings_count }})</span>
                 </div>
-                <div class="text-2xl font-bold text-[var(--color-primary-dark)]">{{ total }} ج.م</div>
-                <p v-if="product.availability_type==='pre_order'" class="text-sm text-[var(--color-text-muted)]">{{ t('product.lead_time', null, { hours: product.lead_time_hours || 48 }) }}</p>
+                <div class="text-3xl font-bold tracking-tight text-[var(--color-primary-dark)]">{{ total }} ج.م</div>
+                <p v-if="product.availability_type==='pre_order'" class="text-sm text-[var(--color-text-muted)]">
+                    {{ t('product.lead_time', null, { hours: product.lead_time_hours || 48 }) }}
+                </p>
 
                 <div v-if="product.variants?.length" class="space-y-2">
-                    <div class="font-semibold">الحجم</div>
+                    <div class="field-label">
+                        {{ t('product.size', 'الحجم') }}
+                        <span class="field-required">*</span>
+                    </div>
                     <div class="flex flex-wrap gap-2">
-                        <button v-for="v in product.variants" :key="v.id" type="button" class="chip" :class="{ 'chip-active': selectedVariant===v.id }" @click="selectedVariant=v.id">{{ v.name_ar }} — {{ v.price }}</button>
+                        <button
+                            v-for="v in product.variants"
+                            :key="v.id"
+                            type="button"
+                            class="chip"
+                            :class="{ 'chip-active': selectedVariant===v.id }"
+                            @click="selectedVariant=v.id"
+                        >
+                            {{ v.name_ar }} — {{ v.price }}
+                        </button>
                     </div>
                 </div>
 
                 <div v-for="group in product.addon_groups || []" :key="group.id" class="space-y-2">
-                    <div class="font-semibold">{{ group.name_ar }}</div>
+                    <div class="field-label">
+                        {{ group.name_ar }}
+                        <span v-if="group.is_required" class="field-required">*</span>
+                        <span v-else class="field-optional">اختياري</span>
+                    </div>
                     <div class="flex flex-wrap gap-2">
-                        <button v-for="opt in group.options" :key="opt.id" type="button" class="chip" :class="{ 'chip-active': selectedAddons.some(a=>a.id===opt.id) }" @click="toggleAddon(opt)">{{ opt.name_ar }} +{{ opt.price }}</button>
+                        <button
+                            v-for="opt in group.options"
+                            :key="opt.id"
+                            type="button"
+                            class="chip"
+                            :class="{ 'chip-active': selectedAddons.some(a=>a.id===opt.id) }"
+                            @click="toggleAddon(opt)"
+                        >
+                            {{ opt.name_ar }} +{{ opt.price }}
+                        </button>
                     </div>
                 </div>
 
-                <div v-if="product.allow_customization && product.customization_config" class="space-y-2">
-                    <div v-for="field in product.customization_config" :key="field.key">
-                        <label class="mb-1 block text-sm font-semibold">{{ field.label_ar }}</label>
-                        <input v-if="field.type==='text'" v-model="customization[field.key]" class="w-full rounded-2xl border px-4 py-2" :maxlength="field.max || 40" />
-                        <textarea v-else v-model="customization[field.key]" class="w-full rounded-2xl border px-4 py-2" rows="2" />
-                    </div>
+                <div v-if="product.allow_customization && product.customization_config" class="space-y-3">
+                    <FormField
+                        v-for="field in product.customization_config"
+                        :key="field.key"
+                        :label="field.label_ar"
+                        :required="!!field.required"
+                        :optional="!field.required"
+                    >
+                        <input
+                            v-if="field.type==='text'"
+                            v-model="customization[field.key]"
+                            :aria-required="field.required ? 'true' : 'false'"
+                            :maxlength="field.max || 40"
+                        />
+                        <textarea
+                            v-else
+                            v-model="customization[field.key]"
+                            :aria-required="field.required ? 'true' : 'false'"
+                            rows="2"
+                        />
+                    </FormField>
                 </div>
 
-                <div class="flex items-center gap-3">
-                    <button type="button" class="rounded-full bg-[var(--color-denim-soft)] px-3 py-1" @click="quantity=Math.max(product.min_qty||1, quantity-1)">−</button>
-                    <span class="font-bold">{{ quantity }}</span>
-                    <button type="button" class="rounded-full bg-[var(--color-denim-soft)] px-3 py-1" @click="quantity++">+</button>
-                </div>
+                <FormField :label="t('product.quantity', 'الكمية')" required>
+                    <div class="flex items-center gap-3">
+                        <button type="button" class="rounded-full bg-[var(--color-denim-soft)] px-3 py-1 font-bold" @click="quantity=Math.max(product.min_qty||1, quantity-1)">−</button>
+                        <span class="min-w-8 text-center font-bold">{{ quantity }}</span>
+                        <button type="button" class="rounded-full bg-[var(--color-denim-soft)] px-3 py-1 font-bold" @click="quantity++">+</button>
+                    </div>
+                </FormField>
             </div>
         </div>
 
-        <div class="mt-8 flex gap-3 border-b">
-            <button v-for="key in ['description','ingredients','allergens','storage','reviews']" :key="key" class="pb-2 text-sm font-semibold" :class="tab===key ? 'border-b-2 border-[var(--color-primary)] text-[var(--color-primary-dark)]' : 'text-[var(--color-text-muted)]'" @click="tab=key">{{ t('product.'+key) }}</button>
+        <div class="mt-10 flex gap-3 overflow-x-auto border-b border-black/5">
+            <button
+                v-for="key in ['description','ingredients','allergens','storage','reviews']"
+                :key="key"
+                class="shrink-0 pb-3 text-sm font-semibold"
+                :class="tab===key ? 'border-b-2 border-[var(--color-primary)] text-[var(--color-primary-dark)]' : 'text-[var(--color-text-muted)]'"
+                @click="tab=key"
+            >
+                {{ t('product.'+key) }}
+            </button>
         </div>
         <div class="mt-4 text-sm leading-7 text-[var(--color-text)]">
             <div v-if="tab==='description'" v-html="product.description_ar" />
@@ -109,7 +165,7 @@ const notify = () => {
             <div v-else-if="tab==='allergens'">{{ product.allergens_ar }}</div>
             <div v-else-if="tab==='storage'">{{ product.storage_instructions_ar }}</div>
             <div v-else class="space-y-3">
-                <div v-for="r in product.reviews" :key="r.id" class="rounded-2xl bg-white p-4 shadow-sm">
+                <div v-for="r in product.reviews" :key="r.id" class="surface-card p-4">
                     <div class="font-semibold">{{ r.user?.name }} · ★ {{ r.rating }}</div>
                     <p class="text-[var(--color-text-muted)]">{{ r.comment }}</p>
                 </div>
@@ -123,7 +179,7 @@ const notify = () => {
             </div>
         </section>
 
-        <div class="fixed inset-x-0 bottom-16 z-40 border-t bg-white/95 p-3 backdrop-blur md:bottom-0">
+        <div class="fixed inset-x-0 bottom-16 z-40 border-t border-black/5 bg-white/95 p-3 backdrop-blur md:bottom-0">
             <div class="mx-auto flex max-w-6xl gap-3">
                 <button v-if="product.availability_type!=='sold_out'" type="button" class="btn-primary flex-1" @click="addToCart">
                     {{ product.availability_type==='available_tomorrow' ? t('product.book_tomorrow') : (product.availability_type==='pre_order' ? t('product.preorder') : t('product.add_to_cart')) }}

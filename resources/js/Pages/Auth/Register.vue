@@ -1,23 +1,39 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import ShopLayout from '@/Layouts/ShopLayout.vue';
+import FormField from '@/Components/Form/FormField.vue';
 import { useUiText } from '@/Composables/useUiText';
+
 defineOptions({ layout: ShopLayout });
 const { t } = useUiText();
 const form = useForm({ name: '', phone: '', email: '', password: '', password_confirmation: '' });
 </script>
+
 <template>
     <Head :title="t('auth.register')" />
     <div class="mx-auto max-w-md px-4 py-10">
         <h1 class="font-heading text-3xl text-[var(--color-brown)]">{{ t('auth.register') }}</h1>
-        <form class="mt-6 space-y-3 rounded-3xl bg-white p-5 shadow-sm" @submit.prevent="form.post('/register')">
-            <input v-model="form.name" class="w-full rounded-2xl border px-4 py-3" placeholder="الاسم" />
-            <input v-model="form.phone" class="w-full rounded-2xl border px-4 py-3" :placeholder="t('auth.phone')" />
-            <input v-model="form.email" class="w-full rounded-2xl border px-4 py-3" placeholder="إيميل (اختياري)" />
-            <input v-model="form.password" type="password" class="w-full rounded-2xl border px-4 py-3" :placeholder="t('auth.password')" />
-            <input v-model="form.password_confirmation" type="password" class="w-full rounded-2xl border px-4 py-3" placeholder="تأكيد كلمة السر" />
+        <form class="surface-card mt-6 space-y-4 p-5" @submit.prevent="form.post('/register')">
+            <FormField :label="t('auth.name', 'الاسم')" required :error="form.errors.name">
+                <input v-model="form.name" aria-required="true" autocomplete="name" />
+            </FormField>
+            <FormField :label="t('auth.phone')" required :error="form.errors.phone">
+                <input v-model="form.phone" aria-required="true" inputmode="tel" autocomplete="tel" />
+            </FormField>
+            <FormField :label="t('auth.email_optional', 'البريد الإلكتروني')" optional :error="form.errors.email">
+                <input v-model="form.email" type="email" autocomplete="email" />
+            </FormField>
+            <FormField :label="t('auth.password')" required :error="form.errors.password">
+                <input v-model="form.password" type="password" aria-required="true" autocomplete="new-password" />
+            </FormField>
+            <FormField :label="t('auth.password_confirm', 'تأكيد كلمة المرور')" required :error="form.errors.password_confirmation">
+                <input v-model="form.password_confirmation" type="password" aria-required="true" autocomplete="new-password" />
+            </FormField>
             <button class="btn-primary w-full" :disabled="form.processing">{{ t('auth.register') }}</button>
-            <p class="text-sm">عندك حساب؟ <Link href="/login" class="text-[var(--color-denim)]">{{ t('auth.login') }}</Link></p>
+            <p class="text-sm">
+                {{ t('auth.have_account', 'عندك حساب؟') }}
+                <Link href="/login" class="font-semibold text-[var(--color-denim)]">{{ t('auth.login') }}</Link>
+            </p>
         </form>
     </div>
 </template>

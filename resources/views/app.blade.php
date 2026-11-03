@@ -16,10 +16,10 @@
             @foreach($themeVars as $var => $value)
                 {{ $var }}: {{ $value }};
             @endforeach
-            --font-heading: 'Baloo Bhaijaan 2', 'Fredoka', 'Cairo', sans-serif;
-            --font-body: 'Cairo', 'Tajawal', sans-serif;
-            --radius-card: 1.5rem;
-            --shadow-soft: 0 10px 30px rgba(242, 160, 184, 0.18);
+            --font-heading: '{{ setting('theme.heading_font', 'Cairo') }}', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
+            --font-body: '{{ setting('theme.body_font', 'Tajawal') }}', 'Cairo', ui-sans-serif, system-ui, sans-serif;
+            --radius-card: 1rem;
+            --shadow-soft: 0 12px 28px rgba(228, 120, 157, 0.18);
         }
     </style>
 

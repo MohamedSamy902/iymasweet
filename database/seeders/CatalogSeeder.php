@@ -142,10 +142,64 @@ class CatalogSeeder extends Seeder
                 ]
             );
 
-            ProductImage::query()->updateOrCreate(
-                ['product_id' => $product->id, 'is_primary' => true],
-                ['path' => '/images/logo-placeholder.svg', 'alt_ar' => $ar, 'sort_order' => 0]
-            );
+            $mediaPool = match ($cat) {
+                'donuts' => ['/images/products/donut-1.jpg', '/images/products/donut-2.jpg', '/images/products/donut-3.jpg', '/images/products/glazed.jpg'],
+                'cakes' => ['/images/products/cake-1.jpg', '/images/products/cake-2.jpg', '/images/products/cake-3.jpg', '/images/products/choco-1.jpg'],
+                'cookies' => ['/images/products/cookie-1.jpg', '/images/products/cookie-2.jpg', '/images/products/choco-1.jpg'],
+                default => ['/images/products/box-1.jpg', '/images/products/box-2.jpg', '/images/products/donut-1.jpg', '/images/products/cookie-1.jpg'],
+            };
+
+            // Clear old media then seed gallery (multi-image + optional video)
+            ProductImage::query()->where('product_id', $product->id)->delete();
+
+            $primary = $mediaPool[$i % count($mediaPool)];
+            $secondary = $mediaPool[($i + 1) % count($mediaPool)];
+            $tertiary = $mediaPool[($i + 2) % count($mediaPool)];
+
+            ProductImage::query()->create([
+                'product_id' => $product->id,
+                'path' => $primary,
+                'type' => 'image',
+                'mime' => 'image/jpeg',
+                'alt_ar' => $ar,
+                'alt_en' => $en,
+                'sort_order' => 0,
+                'is_primary' => true,
+            ]);
+            ProductImage::query()->create([
+                'product_id' => $product->id,
+                'path' => $secondary,
+                'type' => 'image',
+                'mime' => 'image/jpeg',
+                'alt_ar' => $ar.' — زاوية ٢',
+                'alt_en' => $en.' — angle 2',
+                'sort_order' => 1,
+                'is_primary' => false,
+            ]);
+            ProductImage::query()->create([
+                'product_id' => $product->id,
+                'path' => $tertiary,
+                'type' => 'image',
+                'mime' => 'image/jpeg',
+                'alt_ar' => $ar.' — تفاصيل',
+                'alt_en' => $en.' — detail',
+                'sort_order' => 2,
+                'is_primary' => false,
+            ]);
+
+            if ($featured || $best) {
+                ProductImage::query()->create([
+                    'product_id' => $product->id,
+                    'path' => '/videos/product-demo.mp4',
+                    'type' => 'video',
+                    'poster_path' => $primary,
+                    'mime' => 'video/mp4',
+                    'alt_ar' => 'فيديو '.$ar,
+                    'alt_en' => $en.' video',
+                    'sort_order' => 3,
+                    'is_primary' => false,
+                ]);
+            }
 
             if (str_starts_with($slug, 'donuts') || str_starts_with($slug, 'box')) {
                 ProductVariant::query()->updateOrCreate(
@@ -205,7 +259,7 @@ class CatalogSeeder extends Seeder
                 'compare_at_price' => 330,
                 'availability_type' => AvailabilityType::AvailableNow,
                 'is_active' => true,
-                'image' => '/images/logo-placeholder.svg',
+                'image' => '/images/products/box-1.jpg',
             ]
         );
 
@@ -230,7 +284,7 @@ class CatalogSeeder extends Seeder
                 'max_items' => 6,
                 'availability_type' => AvailabilityType::AvailableNow,
                 'is_active' => true,
-                'image' => '/images/logo-placeholder.svg',
+                'image' => '/images/products/donut-2.jpg',
             ]
         );
 
@@ -249,7 +303,7 @@ class CatalogSeeder extends Seeder
                 'compare_at_price' => 760,
                 'availability_type' => AvailabilityType::AvailableTomorrow,
                 'is_active' => true,
-                'image' => '/images/logo-placeholder.svg',
+                'image' => '/images/products/box-2.jpg',
             ]
         );
     }

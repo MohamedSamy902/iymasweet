@@ -24,7 +24,15 @@ class Product extends Model
     public function tags(): BelongsToMany { return $this->belongsToMany(Tag::class); }
     public function attributeValues(): HasMany { return $this->hasMany(ProductAttributeValue::class); }
     public function reviews(): HasMany { return $this->hasMany(Review::class); }
-    public function primaryImage(): ?ProductImage { return $this->images->firstWhere("is_primary", true) ?? $this->images->first(); }
+    public function primaryImage(): ?ProductImage
+    {
+        $images = $this->images->where('type', '!=', 'video')->values();
+        if ($images->isEmpty()) {
+            $images = $this->images;
+        }
+
+        return $images->firstWhere('is_primary', true) ?? $images->first();
+    }
     public function name(?string $locale = null): string { $locale ??= app()->getLocale(); return $locale === "en" ? ($this->name_en ?: $this->name_ar) : $this->name_ar; }
     public function isSoldOut(): bool { return $this->availability_type === AvailabilityType::SoldOut || ($this->stock_quantity !== null && $this->stock_quantity <= 0); }
     public function effectivePrice(): string { return (string) ($this->variants->firstWhere("is_default", true)?->price ?? $this->base_price); }
