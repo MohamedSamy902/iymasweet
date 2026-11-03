@@ -58,7 +58,7 @@ class ChatbotService
             'working_hours' => $this->textResponse('مواعيد التوصيل حسب جدول العمل اليومي. اختاري اليوم والموعد المناسب أثناء إتمام الطلب.'),
             'offers' => $this->textResponse('العروض والكوبونات المتاحة تظهر في الصفحة الرئيسية والمنيو.'),
             'faq' => $this->faqAnswer($expanded),
-            'human_contact' => $this->textResponse('للتواصل المباشر عبر واتساب: '.setting('general.whatsapp', '201000000000')),
+            'human_contact' => $this->textResponse('للتواصل المباشر عبر واتساب: '.setting('general.whatsapp', '201007366484')),
             'thanks', 'bye' => $this->textResponse('على الرحب. لو احتجتي حاجة تانية إحنا موجودين.'),
             default => $this->fallback($expanded),
         };

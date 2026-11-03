@@ -11,8 +11,14 @@ const { t } = useUiText();
 const settings = computed(() => page.props.settings || {});
 const brand = computed(() => settings.value.brand || {});
 const announcement = computed(() => settings.value.announcement || {});
+const features = computed(() => settings.value.features || {});
+const chatbotEnabled = computed(() => !!features.value.chatbot_enabled);
 const cartCount = computed(() => page.props.cartCount || 0);
 const locale = computed(() => page.props.locale || 'ar');
+const whatsappUrl = computed(() => {
+    const raw = String(brand.value.whatsapp || '201007366484').replace(/\D/g, '');
+    return `https://wa.me/${raw}`;
+});
 
 const navItems = computed(() => [
     { href: '/', label: t('layout.nav_home', 'الرئيسية'), icon: Home },
@@ -111,10 +117,14 @@ const navItems = computed(() => [
                     <Link href="/contact" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">تواصل معنا</Link>
                 </div>
                 <div class="space-y-2 text-sm">
-                    <div class="font-semibold text-[var(--color-brown)]">سياسات</div>
+                    <div class="font-semibold text-[var(--color-brown)]">تواصل</div>
+                    <a :href="whatsappUrl" target="_blank" rel="noopener" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">
+                        واتساب {{ brand.phone || '01007366484' }}
+                    </a>
+                    <a v-if="brand.instagram" :href="brand.instagram" target="_blank" rel="noopener" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">إنستجرام</a>
+                    <a v-if="brand.facebook" :href="brand.facebook" target="_blank" rel="noopener" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">فيسبوك</a>
+                    <p class="pt-1 text-xs text-[var(--color-text-muted)]">{{ brand.address || 'القاهرة، مصر' }}</p>
                     <Link href="/shipping" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">الدفع والتوصيل</Link>
-                    <Link href="/refund" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">الإلغاء والاسترجاع</Link>
-                    <Link href="/privacy" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">الخصوصية</Link>
                     <Link href="/terms" class="block text-[var(--color-text-muted)] hover:text-[var(--color-denim)]">الشروط</Link>
                 </div>
             </div>
@@ -140,7 +150,20 @@ const navItems = computed(() => [
             </Link>
         </div>
 
-        <ChatWidget />
+        <ChatWidget v-if="chatbotEnabled" />
+        <a
+            v-else
+            :href="whatsappUrl"
+            target="_blank"
+            rel="noopener"
+            class="iyma-wa-fab fixed z-[70] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg"
+            aria-label="واتساب Iyma Sweet"
+            title="واتساب"
+        >
+            <svg viewBox="0 0 24 24" class="h-7 w-7" fill="currentColor" aria-hidden="true">
+                <path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.15 1.6 5.96L0 24l6.3-1.65a11.9 11.9 0 0 0 5.75 1.47h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.17-3.44-8.44ZM12.06 21.15h-.01a9.24 9.24 0 0 1-4.71-1.29l-.34-.2-3.74.98 1-3.64-.22-.37a9.23 9.23 0 0 1-1.41-4.92c0-5.1 4.15-9.25 9.26-9.25a9.2 9.2 0 0 1 6.54 2.71 9.2 9.2 0 0 1 2.71 6.55c0 5.1-4.15 9.25-9.24 9.25Zm5.37-6.93c-.29-.15-1.73-.85-2-.95-.27-.1-.46-.15-.66.15-.2.29-.76.95-.93 1.15-.17.2-.34.22-.63.07-.29-.15-1.22-.45-2.33-1.44-.86-.77-1.44-1.72-1.61-2.01-.17-.29-.02-.45.13-.6.13-.13.29-.34.44-.51.15-.17.2-.29.29-.49.1-.2.05-.37-.02-.52-.07-.15-.66-1.59-.9-2.18-.24-.58-.48-.5-.66-.51h-.56c-.2 0-.52.07-.79.37-.27.29-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.73-.71 1.97-1.39.24-.68.24-1.27.17-1.39-.07-.12-.26-.2-.55-.34Z" />
+            </svg>
+        </a>
 
         <nav
             class="iyma-bottom-nav fixed inset-x-0 bottom-0 z-50 border-t border-[var(--color-primary-soft)] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
@@ -170,8 +193,19 @@ const navItems = computed(() => [
 <style scoped>
 .iyma-mini-cart {
     inset-inline-start: 0.75rem;
-    inset-inline-end: 5rem; /* room for chat FAB */
+    inset-inline-end: 5rem; /* room for WhatsApp / chat FAB */
     bottom: calc(4.35rem + env(safe-area-inset-bottom, 0px));
+}
+
+.iyma-wa-fab {
+    inset-inline-end: 1rem;
+    bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 768px) {
+    .iyma-wa-fab {
+        bottom: 1.5rem;
+    }
 }
 
 :global(html.iyma-chat-open) .iyma-mini-cart,

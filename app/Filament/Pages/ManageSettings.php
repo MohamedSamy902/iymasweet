@@ -46,7 +46,10 @@ class ManageSettings extends Page
             'tagline_en' => $settings->get('general.tagline', 'Handmade with love', 'en'),
             'phone' => $settings->get('general.phone'),
             'whatsapp' => $settings->get('general.whatsapp'),
+            'whatsapp_handle' => $settings->get('general.whatsapp_handle', '@iymasweet'),
             'email' => $settings->get('general.email'),
+            'instagram' => $settings->get('general.instagram'),
+            'facebook' => $settings->get('general.facebook'),
             'currency' => $settings->get('general.currency', 'EGP'),
             'currency_symbol' => $settings->get('general.currency_symbol', 'ج.م'),
             'english_enabled' => (bool) $settings->get('general.english_enabled', true),
@@ -57,6 +60,7 @@ class ManageSettings extends Page
             'announcement_text_ar' => $settings->get('content.announcement_text', null, 'ar'),
             'announcement_text_en' => $settings->get('content.announcement_text', null, 'en'),
             'show_sparkles' => (bool) $settings->get('theme.show_sparkles', true),
+            'chatbot_enabled' => (bool) $settings->get('features.chatbot_enabled', false),
             'primary' => $settings->get('theme.primary', '#F2A0B8'),
             'primary_dark' => $settings->get('theme.primary-dark', '#E4789D'),
             'primary_soft' => $settings->get('theme.primary-soft', '#FDE8EE'),
@@ -86,8 +90,11 @@ class ManageSettings extends Page
                             TextInput::make('tagline_ar')->label('الشعار الفرعي (عربي)'),
                             TextInput::make('tagline_en')->label('الشعار الفرعي (إنجليزي)'),
                             TextInput::make('phone')->label('الموبايل')->tel(),
-                            TextInput::make('whatsapp')->label('واتساب (wa.me)'),
+                            TextInput::make('whatsapp')->label('واتساب (بدون + ، مثل 201007366484)'),
+                            TextInput::make('whatsapp_handle')->label('يوزر واتساب'),
                             TextInput::make('email')->label('الإيميل')->email(),
+                            TextInput::make('instagram')->label('رابط إنستجرام')->url(),
+                            TextInput::make('facebook')->label('رابط فيسبوك')->url(),
                             TextInput::make('currency')->label('العملة')->maxLength(8),
                             TextInput::make('currency_symbol')->label('رمز العملة'),
                             Toggle::make('english_enabled')->label('تفعيل الإنجليزية'),
@@ -115,6 +122,7 @@ class ManageSettings extends Page
                             Toggle::make('announcement_enabled')->label('بانر الإعلان العلوي'),
                             TextInput::make('announcement_text_ar')->label('نص الإعلان (عربي)'),
                             TextInput::make('announcement_text_en')->label('نص الإعلان (إنجليزي)'),
+                            Toggle::make('chatbot_enabled')->label('تفعيل شات المساعد (حالياً موقف مؤقتاً)'),
                         ]),
                     ]),
                 ]),
@@ -139,10 +147,14 @@ class ManageSettings extends Page
 
         $settings->set('general', 'phone', $data['phone'] ?? null);
         $settings->set('general', 'whatsapp', $data['whatsapp'] ?? null);
+        $settings->set('general', 'whatsapp_handle', $data['whatsapp_handle'] ?? '@iymasweet');
         $settings->set('general', 'email', $data['email'] ?? null);
+        $settings->set('general', 'instagram', $data['instagram'] ?? null);
+        $settings->set('general', 'facebook', $data['facebook'] ?? null);
         $settings->set('general', 'currency', $data['currency'] ?? 'EGP');
         $settings->set('general', 'currency_symbol', $data['currency_symbol'] ?? 'ج.م');
         $settings->set('general', 'english_enabled', (bool) ($data['english_enabled'] ?? true), 'boolean');
+        $settings->set('features', 'chatbot_enabled', (bool) ($data['chatbot_enabled'] ?? false), 'boolean');
 
         $colorMap = [
             'primary' => 'primary',

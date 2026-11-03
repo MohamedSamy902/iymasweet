@@ -22,15 +22,27 @@ class SettingsSeeder extends Seeder
             'en' => 'Handmade with love',
         ], 'string', true);
 
-        $settings->set('general', 'phone', '01000000000', 'string');
-        $settings->set('general', 'whatsapp', '201000000000', 'string');
+        $settings->set('general', 'phone', '01007366484', 'string');
+        $settings->set('general', 'whatsapp', '201007366484', 'string');
+        $settings->set('general', 'whatsapp_handle', '@iymasweet', 'string');
         $settings->set('general', 'email', 'hello@iymasweet.com', 'string');
+        $settings->set('general', 'address', [
+            'ar' => 'القاهرة، مصر',
+            'en' => 'Cairo, Egypt',
+        ], 'text', true);
+        $settings->set('general', 'about_short', [
+            'ar' => '٦ سنوات خبرة في صناعة الحلويات. حلويات وتورتات هاند ميد بمكونات ممتازة، واهتمام بالتفاصيل والجودة قبل أي شيء.',
+            'en' => '6 years of handmade sweets experience — quality ingredients and attention to detail first.',
+        ], 'text', true);
+        $settings->set('general', 'instagram', 'https://instagram.com/eman.sayed.940641', 'string');
+        $settings->set('general', 'facebook', 'https://www.facebook.com/iymasweet', 'string');
         $settings->set('general', 'logo', null, 'image');
         $settings->set('general', 'favicon', null, 'image');
         $settings->set('general', 'currency', 'EGP', 'string');
         $settings->set('general', 'currency_symbol', 'ج.م', 'string');
         $settings->set('general', 'timezone', 'Africa/Cairo', 'string');
         $settings->set('general', 'english_enabled', true, 'boolean');
+        $settings->set('features', 'chatbot_enabled', false, 'boolean');
 
         foreach (config('iyma.theme_defaults') as $cssVar => $value) {
             $key = str_replace('--color-', '', $cssVar);

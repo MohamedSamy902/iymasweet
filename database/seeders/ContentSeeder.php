@@ -19,8 +19,8 @@ class ContentSeeder extends Seeder
     public function run(): void
     {
         $pages = [
-            ['about', 'من نحن', 'About', 'Iyma Sweet براند حلويات منزلية: دونتس، تورتات، وبوكسات هدايا بتوصيل للمنازل.'],
-            ['contact', 'تواصل معنا', 'Contact', 'تقدري ترسلي رسالة من النموذج أو تتواصلي عبر واتساب.'],
+            ['about', 'من نحن', 'About', "Iyma Sweet — ٦ سنوات خبرة في صناعة الحلويات.\nحلويات وتورتات هاند ميد بمكونات ممتازة، واهتمام بالتفاصيل والجودة قبل أي شيء.\nنخدم من القاهرة، مصر."],
+            ['contact', 'تواصل معنا', 'Contact', "تواصلي معنا عبر واتساب: 01007366484 (@iymasweet)\nأو ابعثي رسالة من النموذج."],
             ['faq', 'الأسئلة الشائعة', 'FAQ', 'إجابات مختصرة عن التوصيل والدفع والطلبات.'],
             ['privacy', 'سياسة الخصوصية', 'Privacy', 'نجمع البيانات اللازمة لتنفيذ الطلب فقط، ولا نشاركها مع أطراف غير ضرورية.'],
             ['terms', 'الشروط والأحكام', 'Terms', 'باستخدام المتجر يعني الموافقة على شروط الطلب والدفع والتوصيل.'],
@@ -107,11 +107,15 @@ class ContentSeeder extends Seeder
 
         SocialLink::query()->updateOrCreate(
             ['platform' => 'instagram'],
-            ['url' => 'https://instagram.com/', 'icon' => 'instagram', 'is_active' => true, 'sort_order' => 1]
+            ['url' => 'https://instagram.com/eman.sayed.940641', 'icon' => 'instagram', 'is_active' => true, 'sort_order' => 1]
+        );
+        SocialLink::query()->updateOrCreate(
+            ['platform' => 'facebook'],
+            ['url' => 'https://www.facebook.com/iymasweet', 'icon' => 'facebook', 'is_active' => true, 'sort_order' => 2]
         );
         SocialLink::query()->updateOrCreate(
             ['platform' => 'whatsapp'],
-            ['url' => 'https://wa.me/201000000000', 'icon' => 'whatsapp', 'is_active' => true, 'sort_order' => 2]
+            ['url' => 'https://wa.me/201007366484', 'icon' => 'whatsapp', 'is_active' => true, 'sort_order' => 3]
         );
 
         foreach ([
