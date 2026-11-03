@@ -28,10 +28,16 @@ const navItems = computed(() => [
     { href: '/account/orders', label: t('layout.nav_orders', 'طلباتي'), icon: ClipboardList },
     { href: '/account', label: t('layout.nav_account', 'حسابي'), icon: UserRound },
 ]);
+
+const isActive = (href) => {
+    const url = page.url || '/';
+    if (href === '/') return url === '/' || url === '';
+    return url === href || url.startsWith(`${href}/`) || url.startsWith(`${href}?`);
+};
 </script>
 
 <template>
-    <div class="iyma-shell min-h-dvh w-full max-w-[100vw] overflow-x-clip pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">
+    <div class="iyma-shell min-h-dvh w-full pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-0">
         <div
             v-if="announcement.enabled && announcement.text"
             class="bg-[var(--color-primary)] px-4 py-2 text-center text-sm font-semibold text-white"
@@ -93,7 +99,7 @@ const navItems = computed(() => [
             </div>
         </header>
 
-        <main>
+        <main class="w-full max-w-full overflow-x-clip">
             <slot />
         </main>
 
@@ -137,10 +143,15 @@ const navItems = computed(() => [
             </div>
         </footer>
 
-        <!-- Mini cart: leave gap for chat FAB on the end side -->
+        <WelcomePopup />
+        <ChatWidget v-if="chatbotEnabled" />
+    </div>
+
+    <!-- Fixed chrome teleported outside overflow containers so it never clips/disappears -->
+    <Teleport to="body">
         <div
             v-if="cartCount > 0"
-            class="iyma-mini-cart fixed z-40 md:hidden"
+            class="iyma-mini-cart fixed z-[60] md:hidden"
         >
             <Link
                 href="/checkout"
@@ -151,11 +162,8 @@ const navItems = computed(() => [
             </Link>
         </div>
 
-        <WelcomePopup />
-
-        <ChatWidget v-if="chatbotEnabled" />
         <a
-            v-else
+            v-if="!chatbotEnabled"
             :href="whatsappUrl"
             target="_blank"
             rel="noopener"
@@ -169,20 +177,21 @@ const navItems = computed(() => [
         </a>
 
         <nav
-            class="iyma-bottom-nav fixed inset-x-0 bottom-0 z-50 border-t border-[var(--color-primary-soft)] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
-            aria-label="Bottom navigation"
+            class="iyma-bottom-nav fixed inset-x-0 bottom-0 z-[80] border-t border-[var(--color-primary-soft)] bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_20px_rgba(122,62,38,0.08)] md:hidden"
+            aria-label="التنقل السفلي"
         >
-            <ul class="grid grid-cols-5">
-                <li v-for="item in navItems" :key="item.href">
+            <ul class="mx-auto grid max-w-lg grid-cols-5">
+                <li v-for="item in navItems" :key="item.href" class="min-w-0">
                     <Link
                         :href="item.href"
-                        class="relative flex flex-col items-center gap-1 px-1 py-2 text-[11px] font-semibold text-[var(--color-text-muted)]"
+                        class="relative flex h-14 flex-col items-center justify-center gap-0.5 px-0.5 text-[10px] font-semibold leading-tight"
+                        :class="isActive(item.href) ? 'text-[var(--color-primary-dark)]' : 'text-[var(--color-text-muted)]'"
                     >
-                        <component :is="item.icon" class="h-5 w-5" />
-                        <span class="truncate">{{ item.label }}</span>
+                        <component :is="item.icon" class="h-5 w-5 shrink-0" />
+                        <span class="max-w-full truncate px-0.5">{{ item.label }}</span>
                         <span
                             v-if="item.badge"
-                            class="absolute top-1 end-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[10px] text-white"
+                            class="absolute top-1 end-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[10px] text-white"
                         >
                             {{ item.badge }}
                         </span>
@@ -190,13 +199,13 @@ const navItems = computed(() => [
                 </li>
             </ul>
         </nav>
-    </div>
+    </Teleport>
 </template>
 
 <style scoped>
 .iyma-mini-cart {
     inset-inline-start: 0.75rem;
-    inset-inline-end: 5rem; /* room for WhatsApp / chat FAB */
+    inset-inline-end: 5rem;
     bottom: calc(4.35rem + env(safe-area-inset-bottom, 0px));
 }
 
@@ -209,11 +218,5 @@ const navItems = computed(() => [
     .iyma-wa-fab {
         bottom: 1.5rem;
     }
-}
-
-:global(html.iyma-chat-open) .iyma-mini-cart,
-:global(html.iyma-chat-open) .iyma-bottom-nav {
-    visibility: hidden;
-    pointer-events: none;
 }
 </style>

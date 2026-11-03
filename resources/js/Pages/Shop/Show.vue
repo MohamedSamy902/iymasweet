@@ -179,7 +179,7 @@ const notify = () => {
             </div>
         </section>
 
-        <div class="fixed inset-x-0 bottom-16 z-40 border-t border-black/5 bg-white/95 p-3 backdrop-blur md:bottom-0">
+        <div class="fixed inset-x-0 z-[55] border-t border-black/5 bg-white/95 p-3 backdrop-blur md:bottom-0" style="bottom: calc(3.75rem + env(safe-area-inset-bottom, 0px))">
             <div class="mx-auto flex max-w-6xl gap-3">
                 <button v-if="product.availability_type!=='sold_out'" type="button" class="btn-primary flex-1" @click="addToCart">
                     {{ product.availability_type==='available_tomorrow' ? t('product.book_tomorrow') : (product.availability_type==='pre_order' ? t('product.preorder') : t('product.add_to_cart')) }}

@@ -95,11 +95,23 @@
         overscroll-behavior-x: none;
     }
 
-    #app,
+    #app {
+        width: 100%;
+        max-width: 100%;
+    }
+
     .iyma-shell {
         width: 100%;
         max-width: 100%;
-        overflow-x: clip;
+        /* do not clip — fixed bottom nav is teleported; main clips instead */
+    }
+
+    .iyma-bottom-nav {
+        /* always visible on mobile; never hide with visibility tricks */
+        display: block;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: none !important;
     }
 
     h1,
