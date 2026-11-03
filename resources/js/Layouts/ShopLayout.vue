@@ -4,6 +4,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { Home, ShoppingBag, ShoppingCart, UserRound, ClipboardList } from '@lucide/vue';
 import { useUiText } from '@/Composables/useUiText';
 import ChatWidget from '@/Components/Chatbot/ChatWidget.vue';
+import WelcomePopup from '@/Components/WelcomePopup.vue';
 
 const page = usePage();
 const { t } = useUiText();
@@ -149,6 +150,8 @@ const navItems = computed(() => [
                 <span>{{ t('layout.cart_continue', 'إتمام الطلب') }}</span>
             </Link>
         </div>
+
+        <WelcomePopup />
 
         <ChatWidget v-if="chatbotEnabled" />
         <a

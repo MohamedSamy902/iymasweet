@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\Banner;
 use App\Services\SettingsService;
 use BackedEnum;
 use Filament\Forms\Components\ColorPicker;
@@ -61,6 +62,7 @@ class ManageSettings extends Page
             'announcement_text_en' => $settings->get('content.announcement_text', null, 'en'),
             'show_sparkles' => (bool) $settings->get('theme.show_sparkles', true),
             'chatbot_enabled' => (bool) $settings->get('features.chatbot_enabled', false),
+            'welcome_popup_enabled' => Banner::query()->where('position', 'welcome_popup')->where('is_active', true)->exists(),
             'primary' => $settings->get('theme.primary', '#F2A0B8'),
             'primary_dark' => $settings->get('theme.primary-dark', '#E4789D'),
             'primary_soft' => $settings->get('theme.primary-soft', '#FDE8EE'),
@@ -123,6 +125,13 @@ class ManageSettings extends Page
                             TextInput::make('announcement_text_ar')->label('نص الإعلان (عربي)'),
                             TextInput::make('announcement_text_en')->label('نص الإعلان (إنجليزي)'),
                             Toggle::make('chatbot_enabled')->label('تفعيل شات المساعد (حالياً موقف مؤقتاً)'),
+                            Toggle::make('welcome_popup_enabled')->label('بانر يظهر عند أول فتح للمتجر'),
+                            Textarea::make('welcome_popup_note')
+                                ->label('تعديل نص/صورة البانر')
+                                ->default('من قائمة المحتوى ← البانرات ← موضع «أول فتح (Popup)»')
+                                ->disabled()
+                                ->dehydrated(false)
+                                ->rows(2),
                         ]),
                     ]),
                 ]),
@@ -155,6 +164,24 @@ class ManageSettings extends Page
         $settings->set('general', 'currency_symbol', $data['currency_symbol'] ?? 'ج.م');
         $settings->set('general', 'english_enabled', (bool) ($data['english_enabled'] ?? true), 'boolean');
         $settings->set('features', 'chatbot_enabled', (bool) ($data['chatbot_enabled'] ?? false), 'boolean');
+
+        $welcomeEnabled = (bool) ($data['welcome_popup_enabled'] ?? false);
+        $welcome = Banner::query()->firstOrCreate(
+            ['position' => 'welcome_popup'],
+            [
+                'title_ar' => 'أهلاً بيك في Iyma Sweet',
+                'subtitle_ar' => 'حلويات هاند ميد بتوصيل لباب البيت',
+                'cta_text_ar' => 'شوف المنيو',
+                'link' => '/shop',
+                'image_mobile' => '/images/products/donut-1.jpg',
+                'image_desktop' => '/images/products/donut-1.jpg',
+                'is_active' => $welcomeEnabled,
+                'sort_order' => 0,
+            ]
+        );
+        if ($welcome->is_active !== $welcomeEnabled) {
+            $welcome->update(['is_active' => $welcomeEnabled]);
+        }
 
         $colorMap = [
             'primary' => 'primary',

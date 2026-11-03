@@ -63,10 +63,27 @@ class ContentSeeder extends Seeder
                 'subtitle_ar' => 'حلويات منزلية طازجة',
                 'cta_text_ar' => 'اطلب الآن',
                 'link' => '/shop',
-                'image_desktop' => '/images/logo-placeholder.svg',
-                'image_mobile' => '/images/logo-placeholder.svg',
+                'image_desktop' => '/images/products/hero-pastry.jpg',
+                'image_mobile' => '/images/products/hero-pastry.jpg',
                 'is_active' => true,
                 'sort_order' => 1,
+            ]
+        );
+
+        Banner::query()->updateOrCreate(
+            ['position' => 'welcome_popup'],
+            [
+                'title_ar' => 'أهلاً بيك في Iyma Sweet',
+                'title_en' => 'Welcome to Iyma Sweet',
+                'subtitle_ar' => '٦ سنوات خبرة في الحلويات الهاند ميد. توصيل لباب البيت — اطلبي دلوقتي أو كلّمينا على واتساب.',
+                'subtitle_en' => '6 years of handmade sweets. Order now or message us on WhatsApp.',
+                'cta_text_ar' => 'شوف المنيو',
+                'cta_text_en' => 'Browse menu',
+                'link' => '/shop',
+                'image_desktop' => '/images/products/donut-1.jpg',
+                'image_mobile' => '/images/products/donut-1.jpg',
+                'is_active' => true,
+                'sort_order' => 0,
             ]
         );
 
