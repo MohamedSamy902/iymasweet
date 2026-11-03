@@ -34,10 +34,13 @@ class AdminPanelProvider extends PanelProvider
             ->authPasswordBroker('admins')
             ->brandName(fn () => (string) setting('general.brand_name', 'Iyma Sweet'))
             ->colors([
-                'primary' => Color::hex('#F2A0B8'),
+                'primary' => Color::hex('#C9477A'),
                 'gray' => Color::Stone,
             ])
             ->font('Cairo')
+            ->brandLogoHeight('2.5rem')
+            ->favicon('/favicon.ico')
+            ->maxContentWidth('full')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

@@ -10,8 +10,8 @@ class PwaController extends Controller
     public function manifest(): JsonResponse
     {
         $name = (string) setting('general.brand_name', 'Iyma Sweet');
-        $theme = (string) setting('theme.primary', '#F2A0B8');
-        $bg = (string) setting('theme.cream', '#FFFAF7');
+        $theme = (string) setting('theme.primary-soft', '#FFF5F8');
+        $bg = (string) setting('theme.cream', '#FFFAF6');
 
         return response()->json([
             'name' => $name,

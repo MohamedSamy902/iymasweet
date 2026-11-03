@@ -58,14 +58,23 @@ const submit = () => form.post('/checkout');
 
 <template>
     <Head :title="t('checkout.title')" />
-    <div class="mx-auto max-w-3xl space-y-6 px-4 py-6">
-        <h1 class="font-heading text-3xl text-[var(--color-brown)]">{{ t('checkout.title') }}</h1>
-        <div class="flex gap-2 text-xs font-bold">
-            <span class="chip" :class="{ 'chip-active': step>=1 }">1 {{ t('checkout.step_info') }}</span>
-            <span class="chip" :class="{ 'chip-active': step>=2 }">2 {{ t('checkout.step_address') }}</span>
-            <span class="chip" :class="{ 'chip-active': step>=3 }">3 {{ t('checkout.step_slot') }}</span>
-            <span class="chip" :class="{ 'chip-active': step>=4 }">4 {{ t('checkout.step_payment') }}</span>
-        </div>
+    <div class="container-shop max-w-3xl space-y-6 py-6 pb-24">
+        <h1 class="type-h1">{{ t('checkout.title') }}</h1>
+        <ol class="flex items-center justify-between gap-2" aria-label="خطوات الطلب">
+            <li v-for="n in 4" :key="n" class="flex flex-1 items-center gap-2">
+                <span
+                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+                    :class="step > n ? 'bg-[var(--mint)] text-[var(--cocoa-900)]' : (step === n ? 'bg-[var(--pink-600)] text-white' : 'bg-[var(--cocoa-100)] text-[var(--cocoa-500)]')"
+                >
+                    <template v-if="step > n">✓</template>
+                    <template v-else>{{ n }}</template>
+                </span>
+                <span v-if="n < 4" class="h-0.5 flex-1 rounded-full" :class="step > n ? 'bg-[var(--mint)]' : 'bg-[var(--cocoa-100)]'" />
+            </li>
+        </ol>
+        <p class="type-caption text-[var(--cocoa-500)]">
+            {{ step === 1 ? t('checkout.step_info') : step === 2 ? t('checkout.step_address') : step === 3 ? t('checkout.step_slot') : t('checkout.step_payment') }}
+        </p>
 
         <section v-if="step===1" class="surface-card space-y-4 p-5">
             <template v-if="!auth_user">
@@ -87,7 +96,7 @@ const submit = () => form.post('/checkout');
 
         <section v-if="step===2" class="surface-card space-y-4 p-5">
             <div v-if="addresses?.length" class="space-y-2">
-                <label v-for="a in addresses" :key="a.id" class="flex items-start gap-2 rounded-xl border border-black/5 p-3">
+                <label v-for="a in addresses" :key="a.id" class="flex items-start gap-2 rounded-[var(--r-md)] border-2 p-3" :class="form.address_id===a.id ? 'border-[var(--pink-500)] bg-[var(--pink-50)]' : 'border-[var(--cocoa-100)]'">
                     <input type="radio" :value="a.id" v-model="form.address_id" />
                     <span>{{ a.label }} — {{ a.area?.name_ar }} · {{ a.street }}</span>
                 </label>
@@ -166,7 +175,7 @@ const submit = () => form.post('/checkout');
         <section v-if="step===4" class="surface-card space-y-4 p-5">
             <div class="space-y-2">
                 <div class="field-label">طريقة الدفع <span class="field-required">*</span></div>
-                <label v-for="m in payment_methods" :key="m.id" class="flex gap-3 rounded-xl border border-black/5 p-3">
+                <label v-for="m in payment_methods" :key="m.id" class="flex gap-3 rounded-[var(--r-md)] border-2 p-3" :class="form.payment_method_id===m.id ? 'border-[var(--pink-500)] bg-[var(--pink-50)]' : 'border-[var(--cocoa-100)]'">
                     <input type="radio" :value="m.id" v-model="form.payment_method_id" />
                     <div>
                         <div class="font-semibold">{{ m.name_ar }}</div>
