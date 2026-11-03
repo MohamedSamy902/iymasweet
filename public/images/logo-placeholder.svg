@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Iyma Sweet">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDE8EE"/>
+      <stop offset="100%" stop-color="#F2A0B8"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="48" fill="url(#g)"/>
+  <circle cx="120" cy="118" r="54" fill="none" stroke="#E4789D" stroke-width="16"/>
+  <circle cx="120" cy="118" r="18" fill="#6F93B8"/>
+  <text x="120" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#7A3E26">Iyma Sweet</text>
+</svg>

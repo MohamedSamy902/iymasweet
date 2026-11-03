@@ -1,0 +1,307 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../js/**/*.{vue,js}';
+@source '../views/**/*.blade.php';
+
+/* Self-hosted fonts — Tajawal (UI) + Cairo (display fallback) */
+@font-face {
+    font-family: 'Tajawal';
+    src: url('/fonts/extra/Tajawal-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Tajawal';
+    src: url('/fonts/extra/Tajawal-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Tajawal';
+    src: url('/fonts/extra/Tajawal-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cairo';
+    src: url('/fonts/cairo-arabic-400.woff2') format('woff2'),
+        url('/fonts/cairo-latin-400.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cairo';
+    src: url('/fonts/cairo-arabic-700.woff2') format('woff2'),
+        url('/fonts/cairo-latin-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@theme {
+    --font-body: 'Tajawal', 'Cairo', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: 'Cairo', 'Tajawal', ui-sans-serif, system-ui, sans-serif;
+    --color-iyma-primary: var(--color-primary, #f2a0b8);
+    --color-iyma-primary-dark: var(--color-primary-dark, #e4789d);
+    --color-iyma-primary-soft: var(--color-primary-soft, #fde8ee);
+    --color-iyma-denim: var(--color-denim, #6f93b8);
+    --color-iyma-denim-soft: var(--color-denim-soft, #e3ecf5);
+    --color-iyma-brown: var(--color-brown, #7a3e26);
+    --color-iyma-cream: var(--color-cream, #fffaf7);
+    --color-iyma-text: var(--color-text, #4a3a36);
+    --color-iyma-muted: var(--color-text-muted, #8c7b76);
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+        text-rendering: optimizeLegibility;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: clip;
+        overscroll-behavior-x: none;
+    }
+
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: clip;
+    }
+
+    body {
+        font-family: var(--font-body);
+        font-size: 1rem;
+        line-height: 1.65;
+        letter-spacing: 0.01em;
+        width: 100%;
+        position: relative;
+        background:
+            radial-gradient(1100px 520px at 92% -8%, color-mix(in srgb, var(--color-primary-soft) 70%, white), transparent 58%),
+            radial-gradient(800px 460px at -8% 18%, color-mix(in srgb, var(--color-denim-soft) 55%, white), transparent 52%),
+            linear-gradient(180deg, #fffdfb 0%, var(--color-cream) 100%);
+        color: var(--color-text);
+        min-height: 100dvh;
+        overscroll-behavior-x: none;
+    }
+
+    #app {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .iyma-shell {
+        width: 100%;
+        max-width: 100%;
+        /* do not clip — fixed bottom nav is teleported; main clips instead */
+    }
+
+    .iyma-bottom-nav {
+        /* always visible on mobile; never hide with visibility tricks */
+        display: block;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: none !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    .font-heading {
+        font-family: var(--font-heading);
+        letter-spacing: -0.015em;
+        line-height: 1.2;
+        font-weight: 700;
+    }
+
+    ::selection {
+        background: color-mix(in srgb, var(--color-primary) 35%, white);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+@layer components {
+    .font-heading {
+        font-family: var(--font-heading);
+    }
+
+    .font-body {
+        font-family: var(--font-body);
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white transition duration-200;
+        background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+        box-shadow: 0 12px 28px rgba(228, 120, 157, 0.22);
+    }
+
+    .btn-primary:hover {
+        filter: brightness(0.97);
+        transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+        opacity: 0.55;
+        transform: none;
+        cursor: not-allowed;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition duration-200;
+        background: var(--color-denim-soft);
+        color: var(--color-denim);
+    }
+
+    .chip {
+        @apply inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold transition duration-200;
+        background: white;
+        color: var(--color-text);
+        box-shadow: 0 4px 14px rgba(122, 62, 38, 0.06);
+        border: 1px solid rgba(122, 62, 38, 0.06);
+    }
+
+    .chip-active {
+        background: var(--color-primary-soft);
+        color: var(--color-primary-dark);
+        border-color: color-mix(in srgb, var(--color-primary) 40%, white);
+    }
+
+    /* Forms — clear required markers + polished controls */
+    .field {
+        @apply space-y-1.5;
+    }
+
+    .field-label {
+        @apply flex items-center gap-1 text-sm font-semibold text-[var(--color-text)];
+    }
+
+    .field-required {
+        color: #d9486f;
+        font-weight: 800;
+        font-size: 1.05em;
+        line-height: 1;
+    }
+
+    .field-optional {
+        @apply ms-1 text-[11px] font-medium text-[var(--color-text-muted)];
+    }
+
+    .field-hint {
+        @apply text-xs text-[var(--color-text-muted)];
+    }
+
+    .field-error {
+        @apply mt-1 rounded-lg bg-[#d9486f]/10 px-2.5 py-1.5 text-xs font-semibold leading-snug text-[#d9486f];
+    }
+
+    .h-scroll {
+        @apply flex max-w-full gap-2 overflow-x-auto overscroll-x-contain pb-1;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .field-control :is(input, select, textarea) {
+        @apply w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition;
+        border-color: color-mix(in srgb, var(--color-brown) 12%, white);
+        box-shadow: 0 1px 0 rgba(122, 62, 38, 0.02);
+    }
+
+    .field-control :is(input, select, textarea)::placeholder {
+        color: color-mix(in srgb, var(--color-text-muted) 80%, white);
+    }
+
+    .field-control :is(input, select, textarea):focus {
+        border-color: color-mix(in srgb, var(--color-primary) 70%, white);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary-soft) 85%, white);
+    }
+
+    .field--error .field-control :is(input, select, textarea) {
+        border-color: #d9486f;
+        box-shadow: 0 0 0 3px rgba(217, 72, 111, 0.12);
+    }
+
+    .field-control :is(input, select, textarea)[aria-required='true']:placeholder-shown {
+        border-color: color-mix(in srgb, var(--color-primary) 35%, #e8d5d0);
+    }
+
+    .surface-card {
+        @apply rounded-2xl bg-white/95 shadow-sm;
+        border: 1px solid rgba(122, 62, 38, 0.05);
+    }
+
+    .section-rule {
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--color-primary) 45%, white),
+            color-mix(in srgb, var(--color-denim) 35%, white),
+            transparent
+        );
+    }
+
+    .donut-loader {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 999px;
+        border: 6px solid var(--color-primary-soft);
+        border-top-color: var(--color-primary);
+        border-right-color: var(--color-denim);
+        animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes float-soft {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-6px);
+        }
+    }
+
+    .animate-float {
+        animation: float-soft 3.2s ease-in-out infinite;
+    }
+
+    @keyframes fade-up {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-up {
+        animation: fade-up 0.45s ease-out both;
+    }
+}

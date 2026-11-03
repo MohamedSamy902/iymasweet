@@ -1,0 +1,11 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+class ProductVariant extends Model
+{
+    protected $fillable = ["product_id","name_ar","name_en","price","sku","stock_quantity","is_default","sort_order"];
+    protected function casts(): array { return ["price"=>"decimal:2","is_default"=>"boolean"]; }
+    public function product(): BelongsTo { return $this->belongsTo(Product::class); }
+    public function name(?string $locale = null): string { $locale ??= app()->getLocale(); return $locale === "en" ? ($this->name_en ?: $this->name_ar) : $this->name_ar; }
+}
