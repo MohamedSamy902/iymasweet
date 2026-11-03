@@ -117,8 +117,8 @@ const navItems = computed(() => [
                 href="/checkout"
                 class="flex items-center justify-between gap-3 rounded-2xl bg-[var(--color-brown)] px-4 py-3 text-sm font-semibold text-white shadow-lg"
             >
-                <span>{{ cartCount }} منتجات</span>
-                <span>{{ t('layout.cart_continue', 'كمّل الطلب') }}</span>
+                <span>{{ t('layout.items_count', '{count} منتجات').replace('{count}', String(cartCount)) }}</span>
+                <span>{{ t('layout.cart_continue', 'إتمام الطلب') }}</span>
             </Link>
         </div>
 

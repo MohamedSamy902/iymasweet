@@ -65,7 +65,7 @@ class CommerceSeeder extends Seeder
 
         ClosedDate::query()->updateOrCreate(
             ['date' => now()->addMonths(2)->startOfMonth()->toDateString()],
-            ['reason_ar' => 'إجازة تجريبية', 'reason_en' => 'Demo holiday', 'is_full_day' => true]
+            ['reason_ar' => 'إجازة رسمية', 'reason_en' => 'Public holiday', 'is_full_day' => true]
         );
 
         PaymentMethod::query()->updateOrCreate(
@@ -133,7 +133,7 @@ class CommerceSeeder extends Seeder
         User::query()->updateOrCreate(
             ['phone' => '01012345678'],
             [
-                'name' => 'سارة تجريبي',
+                'name' => 'سارة أحمد',
                 'email' => 'sara@example.com',
                 'password' => Hash::make('password'),
                 'is_active' => true,

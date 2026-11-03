@@ -50,7 +50,7 @@ class CartController extends Controller
             );
         }
 
-        return back()->with('success', t('product.added_toast', 'تمام ✨ اتضافت للسلة'));
+        return back()->with('success', t('product.added_toast', 'تمت الإضافة إلى السلة'));
     }
 
     public function update(Request $request, CartItem $item): RedirectResponse

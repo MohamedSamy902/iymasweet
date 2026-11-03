@@ -62,7 +62,7 @@ class OrderController extends Controller
             ->route('account.orders.show', $order->number)
             ->with('success', $duplicate
                 ? 'تم رفع الإيصال (تنبيه: صورة مشابهة استُخدمت قبل كده)'
-                : 'تم رفع الإيصال وبنتراجعها دلوقتي ✨');
+                : 'تم رفع الإيصال وسيتم مراجعته قريباً.');
     }
 
     public function show(string $number): Response

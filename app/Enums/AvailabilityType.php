@@ -12,8 +12,8 @@ enum AvailabilityType: string
     public function labelAr(): string
     {
         return match ($this) {
-            self::AvailableNow => 'متاح دلوقتي',
-            self::SoldOut => 'خلص',
+            self::AvailableNow => 'متاح الآن',
+            self::SoldOut => 'نفد مؤقتاً',
             self::AvailableTomorrow => 'متاح بكرة',
             self::PreOrder => 'بالحجز',
         };

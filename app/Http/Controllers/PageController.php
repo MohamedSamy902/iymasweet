@@ -40,6 +40,6 @@ class PageController extends Controller
         // Store as activity / mail log — free SMTP optional
         logger()->info('contact_form', $data);
 
-        return back()->with('success', 'وصَلنا رسالتك وهنرد عليكِ قريب 💕');
+        return back()->with('success', 'تم استلام رسالتك. سنرد عليك قريباً.');
     }
 }

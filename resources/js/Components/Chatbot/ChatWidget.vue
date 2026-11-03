@@ -1,7 +1,10 @@
 <script setup>
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import axios from 'axios';
+import { MessageCircle } from '@lucide/vue';
+import { useUiText } from '@/Composables/useUiText';
 
+const { t } = useUiText();
 const open = ref(false);
 const loading = ref(false);
 const sessionId = ref(localStorage.getItem('iyma_chat_session') || '');
@@ -99,10 +102,10 @@ onUnmounted(() => {
         v-show="!open"
         type="button"
         class="iyma-chat-fab fixed z-[70] flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-primary)] text-2xl text-white shadow-lg"
-        aria-label="فتح المساعد"
+        :aria-label="t('chat.open', 'فتح المساعد')"
         @click="toggle"
     >
-        💬
+        <MessageCircle class="h-6 w-6" />
     </button>
 
     <Teleport to="body">
@@ -110,7 +113,7 @@ onUnmounted(() => {
             <button
                 type="button"
                 class="absolute inset-0 bg-black/35"
-                aria-label="إغلاق"
+                :aria-label="t('chat.close', 'إغلاق')"
                 @click="close"
             />
 
@@ -118,17 +121,17 @@ onUnmounted(() => {
                 class="iyma-chat-sheet absolute inset-x-0 bottom-0 flex max-h-[min(92dvh,720px)] flex-col overflow-hidden rounded-t-[1.75rem] bg-white shadow-2xl md:inset-x-auto md:end-6 md:bottom-6 md:h-[min(70vh,640px)] md:w-[380px] md:max-h-none md:rounded-3xl"
                 role="dialog"
                 aria-modal="true"
-                aria-label="مساعد Iyma"
+                :aria-label="t('chat.title', 'مساعد Iyma')"
             >
                 <header class="flex shrink-0 items-center justify-between bg-[var(--color-primary)] px-4 py-3 text-white">
                     <div>
-                        <div class="font-heading text-lg leading-tight">مساعد Iyma</div>
-                        <div class="text-xs text-white/85">مساعد آلي — مش شخص حقيقي</div>
+                        <div class="font-heading text-lg leading-tight">{{ t('chat.title', 'مساعد Iyma') }}</div>
+                        <div class="text-xs text-white/85">{{ t('chat.subtitle', 'مساعد تلقائي للإجابة السريعة') }}</div>
                     </div>
                     <button
                         type="button"
                         class="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-lg"
-                        aria-label="إغلاق الشات"
+                        :aria-label="t('chat.close', 'إغلاق')"
                         @click="close"
                     >
                         ×
@@ -187,12 +190,12 @@ onUnmounted(() => {
                         ref="inputEl"
                         v-model="input"
                         class="min-w-0 flex-1 rounded-full border border-[var(--color-primary-soft)] px-4 py-2.5 text-sm outline-none focus:border-[var(--color-primary)]"
-                        placeholder="اكتبي هنا…"
+                        :placeholder="t('chat.placeholder', 'اكتبي سؤالك…')"
                         enterkeyhint="send"
                         autocomplete="off"
                     />
                     <button class="btn-primary shrink-0 !px-4 !py-2.5 text-sm" type="submit">
-                        إرسال
+                        {{ t('chat.send', 'إرسال') }}
                     </button>
                 </form>
             </section>

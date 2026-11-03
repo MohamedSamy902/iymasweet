@@ -19,12 +19,12 @@ enum OrderStatus: string
     {
         return match ($this) {
             self::PendingPayment => 'في انتظار الدفع',
-            self::PaymentReview => 'جاري مراجعة الإيصال',
-            self::Confirmed => 'اتأكد',
+            self::PaymentReview => 'مراجعة الإيصال',
+            self::Confirmed => 'مؤكد',
             self::Preparing => 'قيد التجهيز',
             self::Ready => 'جاهز للتوصيل',
             self::OutForDelivery => 'خرج للتوصيل',
-            self::Delivered => 'اتسلّم',
+            self::Delivered => 'تم التسليم',
             self::Cancelled => 'ملغي',
             self::PaymentRejected => 'الدفع مرفوض',
             self::Refunded => 'مسترجع',

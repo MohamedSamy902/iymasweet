@@ -45,8 +45,8 @@ class SettingsSeeder extends Seeder
         $settings->set('store', 'guest_checkout', true, 'boolean');
         $settings->set('store', 'closed', false, 'boolean');
         $settings->set('store', 'closed_message', [
-            'ar' => 'المتجر مقفول مؤقتاً، هنرجع قريب 🍩',
-            'en' => 'Store temporarily closed. Back soon!',
+            'ar' => 'المتجر مغلق مؤقتاً. نعود قريباً.',
+            'en' => 'Store temporarily closed. We will be back soon.',
         ], 'text', true);
         $settings->set('store', 'sold_out_at_end', true, 'boolean');
         $settings->set('store', 'payment_timeout_hours', 6, 'integer');
@@ -55,8 +55,8 @@ class SettingsSeeder extends Seeder
 
         $settings->set('content', 'announcement_enabled', true, 'boolean');
         $settings->set('content', 'announcement_text', [
-            'ar' => 'التوصيل مجاني فوق ٥٠٠ ج.م 🍩',
-            'en' => 'Free delivery over 500 EGP 🍩',
+            'ar' => 'توصيل مجاني للطلبات فوق ٥٠٠ ج.م',
+            'en' => 'Free delivery on orders over 500 EGP',
         ], 'text', true);
     }
 }

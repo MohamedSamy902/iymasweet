@@ -21,7 +21,7 @@ class ProductBackInStockNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'title' => 'المنتج رجع 🍩',
+            'title' => 'المنتج متاح مجدداً',
             'body' => $this->product->name_ar.' بقى متاح دلوقتي',
             'url' => '/product/'.$this->product->slug,
             'product_id' => $this->product->id,

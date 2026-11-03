@@ -41,7 +41,7 @@ self.addEventListener('fetch', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  let data = { title: 'Iyma Sweet', body: 'عندك تحديث جديد 🍩', url: '/' };
+  let data = { title: 'Iyma Sweet', body: 'لديك تحديث جديد على طلبك', url: '/' };
   try { data = { ...data, ...event.data.json() }; } catch (e) {}
   event.waitUntil(self.registration.showNotification(data.title, {
     body: data.body,

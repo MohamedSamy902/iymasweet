@@ -10,7 +10,7 @@ const { t } = useUiText();
   <Head :title="t('account.title')" />
   <div class="mx-auto max-w-lg px-4 py-8 space-y-4">
     <h1 class="font-heading text-3xl text-[var(--color-brown)]">{{ t('account.title') }}</h1>
-    <div class="rounded-3xl bg-white p-5 shadow-sm">أهلاً {{ user.name }} 🍩</div>
+    <div class="rounded-3xl bg-white p-5 shadow-sm">{{ t('account.hello', 'أهلاً، {name}').replace('{name}', user.name) }}</div>
     <Link href="/account/orders" class="block rounded-3xl bg-white p-4 shadow-sm">{{ t('account.orders') }} ({{ stats.orders }})</Link>
     <Link href="/account/favorites" class="block rounded-3xl bg-white p-4 shadow-sm">{{ t('account.favorites') }} ({{ stats.favorites }})</Link>
     <Link href="/account/profile" class="block rounded-3xl bg-white p-4 shadow-sm">{{ t('account.profile') }}</Link>

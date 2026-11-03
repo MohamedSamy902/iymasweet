@@ -84,7 +84,7 @@ class AccountController extends Controller
             'product_id' => $product->id,
         ]);
 
-        return back()->with('success', 'هنبلّغك أول ما يتوفر ✨');
+        return back()->with('success', 'سننبهك عند توفر المنتج.');
     }
 
     public function profile(): Response

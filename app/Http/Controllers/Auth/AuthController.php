@@ -69,7 +69,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('account.index')->with('success', t('home.welcome', 'أهلاً بيكي يا قمر 🍩'));
+        return redirect()->route('account.index')->with('success', t('home.welcome', 'أهلاً بيك في Iyma Sweet'));
     }
 
     public function logout(Request $request): RedirectResponse

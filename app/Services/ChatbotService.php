@@ -25,13 +25,13 @@ class ChatbotService
 
         return [
             'session_id' => $session->session_id,
-            'welcome' => t('home.welcome', 'أهلاً بيكي يا قمر 🍩'),
-            'disclaimer' => 'أنا مساعد آلي — مش شخص حقيقي',
+            'welcome' => t('home.welcome', 'أهلاً بيك في Iyma Sweet'),
+            'disclaimer' => t('chat.subtitle', 'مساعد تلقائي للإجابة السريعة'),
             'quick_replies' => [
-                ['label' => 'المتاح دلوقتي', 'message' => 'إيه المتاح دلوقتي؟'],
-                ['label' => 'دور على منتج', 'message' => 'عايز دونتس'],
+                ['label' => 'المتاح الآن', 'message' => 'إيه المتاح دلوقتي؟'],
+                ['label' => 'بحث عن منتج', 'message' => 'عايز دونتس'],
                 ['label' => 'تتبع طلب', 'message' => 'طلبي فين؟'],
-                ['label' => 'طرق الدفع', 'message' => 'بتقبلوا إيه؟'],
+                ['label' => 'طرق الدفع', 'message' => 'طرق الدفع'],
             ],
         ];
     }
@@ -45,7 +45,7 @@ class ChatbotService
         $entities = $this->extractEntities($expanded);
 
         $response = match ($intent) {
-            'greeting' => $this->textResponse('أهلاً بيكي ✨ قولي عايزة إيه؟'),
+            'greeting' => $this->textResponse('أهلاً بيك. قولي عايزة تبحثي عن إيه أو اختاري من الأزرار.'),
             'available_now' => $this->productsByAvailability(AvailabilityType::AvailableNow),
             'available_tomorrow' => $this->productsByAvailability(AvailabilityType::AvailableTomorrow),
             'preorder' => $this->productsByAvailability(AvailabilityType::PreOrder),
@@ -53,13 +53,13 @@ class ChatbotService
             'show_cart' => $this->showCart(),
             'add_to_cart' => $this->addFromMessage($expanded, $entities),
             'track_order' => $this->trackOrder($expanded, $userId),
-            'delivery_info' => $this->textResponse('بنوصل لمناطق كتير في القاهرة والجيزة. اختاري المنطقة في الـ checkout وهيبان سعر التوصيل فوراً.'),
-            'payment_methods' => $this->textResponse('بنقبل كاش عند التسليم، InstaPay، ومحافظ إلكترونية. بعد التحويل ارفعي صورة الإيصال من صفحة الطلب.'),
-            'working_hours' => $this->textResponse('مواعيد التوصيل حسب جدول العمل اليومي من الداشبورد — اختاري يوم وslot مناسب في إتمام الطلب.'),
-            'offers' => $this->textResponse('شوفي العروض والكوبونات في الصفحة الرئيسية أو المنيو 🍩'),
+            'delivery_info' => $this->textResponse('التوصيل متاح لمناطق القاهرة والجيزة المفعّلة. سعر التوصيل يظهر تلقائياً عند اختيار المنطقة في إتمام الطلب.'),
+            'payment_methods' => $this->textResponse('نقبل كاش عند الاستلام، InstaPay، والمحافظ الإلكترونية. بعد التحويل ارفعي صورة الإيصال من صفحة الطلب.'),
+            'working_hours' => $this->textResponse('مواعيد التوصيل حسب جدول العمل اليومي. اختاري اليوم والموعد المناسب أثناء إتمام الطلب.'),
+            'offers' => $this->textResponse('العروض والكوبونات المتاحة تظهر في الصفحة الرئيسية والمنيو.'),
             'faq' => $this->faqAnswer($expanded),
-            'human_contact' => $this->textResponse('تقدري تكلمنا على واتساب: '.setting('general.whatsapp', '201000000000')),
-            'thanks', 'bye' => $this->textResponse('العفو يا قمر 💕 مستني طلبك'),
+            'human_contact' => $this->textResponse('للتواصل المباشر عبر واتساب: '.setting('general.whatsapp', '201000000000')),
+            'thanks', 'bye' => $this->textResponse('على الرحب. لو احتجتي حاجة تانية إحنا موجودين.'),
             default => $this->fallback($expanded),
         };
 
@@ -189,16 +189,16 @@ class ChatbotService
             ->get();
 
         if ($products->isEmpty()) {
-            return $this->textResponse('ملاقيناش حاجة مطابقة… جرّبي كلمة تانية أو قولي "المتاح دلوقتي"', suggestions: true);
+            return $this->textResponse('مفيش نتائج مطابقة. جرّبي كلمة تانية أو اختاري «المتاح الآن».', suggestions: true);
         }
 
         return [
             'type' => 'products',
-            'text' => 'لقيتلِك الحاجات دي ✨',
+            'text' => 'نتائج البحث:',
             'products' => $products->map(fn (Product $p) => $this->productCard($p))->values(),
             'buttons' => [
-                ['label' => 'زوّدني بالمزيد', 'message' => 'المزيد'],
-                ['label' => 'شوف السلة', 'message' => 'السله'],
+                ['label' => 'المزيد', 'message' => 'المزيد'],
+                ['label' => 'السلة', 'message' => 'السله'],
             ],
         ];
     }
@@ -231,7 +231,7 @@ class ChatbotService
         }
 
         if ($product->allow_customization) {
-            return $this->textResponse('المنتج ده محتاج تخصيص — افتحي صفحة المنتج عشان تكتبي النص أو ترفعي صورة.', buttons: [
+            return $this->textResponse('هذا المنتج يحتاج تخصيص. افتحي صفحة المنتج لإضافة النص أو الصورة.', buttons: [
                 ['label' => 'فتح المنتج', 'url' => '/product/'.$product->slug],
             ]);
         }
@@ -240,10 +240,10 @@ class ChatbotService
         $qty = (int) ($entities['quantity'] ?? 1);
         $this->carts->addProduct($cart, $product, $qty);
 
-        return $this->textResponse("تمام ✨ ضفت {$product->name_ar} للسلة", buttons: [
-            ['label' => 'كمّل الطلب', 'url' => '/checkout'],
-            ['label' => 'شوف السلة', 'url' => '/cart'],
-            ['label' => 'زوّد حاجة تانية', 'message' => 'عايز حاجه تانيه'],
+        return $this->textResponse("تمت إضافة {$product->name_ar} إلى السلة.", buttons: [
+            ['label' => 'إتمام الطلب', 'url' => '/checkout'],
+            ['label' => 'السلة', 'url' => '/cart'],
+            ['label' => 'إضافة منتج آخر', 'message' => 'عايز حاجه تانيه'],
         ]);
     }
 
@@ -254,8 +254,8 @@ class ChatbotService
         return [
             'type' => 'cart',
             'text' => $cart['summary']['count']
-                ? "عندك {$cart['summary']['count']} منتجات — الإجمالي {$cart['summary']['total']} ج.م"
-                : 'السلة فاضية دلوقتي',
+                ? "{$cart['summary']['count']} منتجات — الإجمالي {$cart['summary']['total']} ج.م"
+                : 'السلة فارغة حالياً.',
             'cart' => $cart,
             'buttons' => [
                 ['label' => 'إتمام الطلب', 'url' => '/checkout'],
@@ -289,7 +289,7 @@ class ChatbotService
             }
         }
 
-        return $this->textResponse('ابعتي رقم الطلب (مثال IS-26-000001) وآخر 4 أرقام من الموبايل، أو سجّلي دخول.');
+        return $this->textResponse('أرسلي رقم الطلب (مثال IS-26-000001) مع آخر 4 أرقام من الموبايل، أو سجّلي الدخول.');
     }
 
     protected function faqAnswer(string $text): array
@@ -300,7 +300,7 @@ class ChatbotService
         });
 
         if (! $faq) {
-            return $this->textResponse('دور في صفحة الأسئلة الشائعة، أو قولي عايزة تكلمي حد.', buttons: [
+            return $this->textResponse('راجعي صفحة الأسئلة الشائعة، أو اطلبي التواصل مع فريق الدعم.', buttons: [
                 ['label' => 'الأسئلة الشائعة', 'url' => '/faq'],
             ]);
         }
@@ -310,14 +310,14 @@ class ChatbotService
 
     protected function fallback(string $text): array
     {
-        return $this->textResponse('مش فاهم قصدي قوي 🙈 جرّبي تختاري من الأزرار أو قولي اسم المنتج.', suggestions: true);
+        return $this->textResponse('لم أتمكن من فهم الطلب. اختاري من الأزرار أو اكتبي اسم المنتج.', suggestions: true);
     }
 
     protected function textResponse(string $text, array $buttons = [], bool $suggestions = false): array
     {
         if ($suggestions && $buttons === []) {
             $buttons = [
-                ['label' => 'المتاح دلوقتي', 'message' => 'إيه المتاح دلوقتي؟'],
+                ['label' => 'المتاح الآن', 'message' => 'إيه المتاح دلوقتي؟'],
                 ['label' => 'تواصل', 'message' => 'عايز اكلم حد'],
             ];
         }
