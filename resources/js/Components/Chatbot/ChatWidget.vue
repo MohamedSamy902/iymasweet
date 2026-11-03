@@ -101,11 +101,12 @@ onUnmounted(() => {
     <button
         v-show="!open"
         type="button"
-        class="iyma-chat-fab fixed z-[70] flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-primary)] text-2xl text-white shadow-lg"
+        class="iyma-chat-fab wa-fab-pulse relative fixed z-[70] flex h-14 w-14 items-center justify-center rounded-full text-white shadow-[var(--sh-lg)]"
+        style="background: linear-gradient(145deg, var(--pink-500), var(--pink-600))"
         :aria-label="t('chat.open', 'فتح المساعد')"
         @click="toggle"
     >
-        <MessageCircle class="h-6 w-6" />
+        <MessageCircle class="h-6 w-6" :stroke-width="1.75" />
     </button>
 
     <Teleport to="body">
@@ -118,19 +119,25 @@ onUnmounted(() => {
             />
 
             <section
-                class="iyma-chat-sheet absolute inset-x-0 bottom-0 flex max-h-[min(92dvh,720px)] flex-col overflow-hidden rounded-t-[1.75rem] bg-white shadow-2xl md:inset-x-auto md:end-6 md:bottom-6 md:h-[min(70vh,640px)] md:w-[380px] md:max-h-none md:rounded-3xl"
+                class="iyma-chat-sheet absolute inset-x-0 bottom-0 flex max-h-[85dvh] flex-col overflow-hidden rounded-t-[28px] bg-[var(--surface)] shadow-[var(--sh-lg)] md:inset-x-auto md:end-6 md:bottom-6 md:h-[600px] md:w-[380px] md:max-h-none md:rounded-[var(--r-lg)]"
                 role="dialog"
                 aria-modal="true"
                 :aria-label="t('chat.title', 'مساعد Iyma')"
             >
-                <header class="flex shrink-0 items-center justify-between bg-[var(--color-primary)] px-4 py-3 text-white">
-                    <div>
-                        <div class="font-heading text-lg leading-tight">{{ t('chat.title', 'مساعد Iyma') }}</div>
-                        <div class="text-xs text-white/85">{{ t('chat.subtitle', 'مساعد تلقائي للإجابة السريعة') }}</div>
+                <header class="flex shrink-0 items-center justify-between border-b border-[var(--pink-100)] bg-[var(--surface)] px-4 py-3">
+                    <div class="flex items-center gap-3">
+                        <img src="/images/products/donut-1.jpg" alt="" class="h-10 w-10 rounded-full object-cover" />
+                        <div>
+                            <div class="font-heading text-lg leading-tight text-[var(--cocoa-900)]">{{ t('chat.title', 'مساعد Iyma') }}</div>
+                            <div class="flex items-center gap-1.5 text-xs font-semibold text-[var(--color-success)]">
+                                <span class="h-2 w-2 rounded-full bg-[var(--color-success)]" />
+                                {{ t('chat.subtitle', 'بيرد فوراً') }}
+                            </div>
+                        </div>
                     </div>
                     <button
                         type="button"
-                        class="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-lg"
+                        class="btn-ghost !text-[var(--cocoa-700)]"
                         :aria-label="t('chat.close', 'إغلاق')"
                         @click="close"
                     >
@@ -143,8 +150,8 @@ onUnmounted(() => {
                         v-for="(m, i) in messages"
                         :key="i"
                         :class="m.role === 'user'
-                            ? 'ms-8 rounded-2xl bg-[var(--color-denim-soft)] p-3 text-sm'
-                            : 'me-6 rounded-2xl bg-[var(--color-primary-soft)] p-3 text-sm'"
+                            ? 'ms-auto max-w-[82%] rounded-[18px] rounded-ee-md bg-[var(--pink-600)] p-3 text-[15px] text-white'
+                            : 'me-auto max-w-[82%] rounded-[18px] rounded-es-md border border-[var(--pink-100)] bg-[var(--surface)] p-3 text-[15px] text-[var(--cocoa-900)]'"
                     >
                         <div>{{ m.text }}</div>
                         <div v-if="m.products?.length" class="mt-2 space-y-2">

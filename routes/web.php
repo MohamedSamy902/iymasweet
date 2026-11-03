@@ -73,6 +73,10 @@ Route::get('/manifest.webmanifest', [PwaController::class, 'manifest'])->name('p
 Route::get('/offline', [PwaController::class, 'offline'])->name('pwa.offline');
 Route::get('/api/pwa/firebase-config', [PwaController::class, 'firebaseConfig'])->name('pwa.firebase');
 
+if (app()->environment('local', 'development', 'staging')) {
+    Route::get('/styleguide', fn () => inertia('Dev/Styleguide'))->name('dev.styleguide');
+}
+
 Route::get('/api/chatbot/init', [ChatbotController::class, 'init']);
 Route::post('/api/chatbot/message', [ChatbotController::class, 'message']);
 Route::post('/api/fcm-tokens', [FcmTokenController::class, 'store']);

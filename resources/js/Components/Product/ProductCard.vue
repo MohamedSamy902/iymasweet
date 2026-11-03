@@ -1,32 +1,99 @@
 <script setup>
+import { computed } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
+import { Heart, Plus, Star } from '@lucide/vue';
 import { useUiText } from '@/Composables/useUiText';
+import ProductImage from '@/Components/Ui/ProductImage.vue';
+import StatusBadge from '@/Components/Ui/StatusBadge.vue';
+
 const props = defineProps({ product: { type: Object, required: true } });
 const { t } = useUiText();
+
+const soldOut = computed(() => props.product.availability_type === 'sold_out');
+
+const categoryKey = computed(() => {
+    const slug = String(props.product.category?.slug || props.product.category_slug || '').toLowerCase();
+    if (slug.includes('cake') || slug.includes('tort') || slug.includes('تورت')) return 'cake';
+    if (slug.includes('cookie') || slug.includes('كوك')) return 'cookie';
+    if (slug.includes('box') || slug.includes('بوكس') || slug.includes('bundle')) return 'box';
+    return 'donut';
+});
+
 const add = () => {
-  if (props.product.availability_type === 'sold_out') return;
-  router.post('/cart', { product_id: props.product.id, quantity: 1 }, { preserveScroll: true });
+    if (soldOut.value) return;
+    try {
+        navigator.vibrate?.(10);
+    } catch (_) {}
+    router.post('/cart', { product_id: props.product.id, quantity: 1 }, { preserveScroll: true });
 };
 </script>
+
 <template>
-  <article class="group overflow-hidden rounded-2xl border border-black/[0.04] bg-white/95 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
-    <Link :href="`/product/${product.slug}`" class="relative block overflow-hidden bg-[var(--color-primary-soft)]/40">
-      <img :src="product.image || '/images/logo-placeholder.svg'" :alt="product.name_ar" class="aspect-square w-full bg-[#f6e9ee] object-cover transition duration-500 group-hover:scale-[1.04]" loading="eager" decoding="async" />
-      <span class="absolute start-2 top-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold text-[var(--color-brown)] shadow-sm" :class="{
-          'text-emerald-700': product.availability_type==='available_now',
-          'text-sky-700': product.availability_type==='available_tomorrow',
-          'text-violet-700': product.availability_type==='pre_order',
-          'text-[var(--color-text-muted)]': product.availability_type==='sold_out',
-        }">{{ product.availability_label }}</span>
-    </Link>
-    <div class="space-y-2.5 p-3.5">
-      <Link :href="`/product/${product.slug}`" class="line-clamp-2 text-sm font-semibold leading-snug text-[var(--color-brown)]">{{ product.name_ar }}</Link>
-      <div class="flex items-baseline gap-2">
-        <span class="text-base font-bold text-[var(--color-primary-dark)]">{{ product.base_price }} {{ t('common.currency','ج.م') }}</span>
-        <span v-if="product.compare_at_price" class="text-xs text-[var(--color-text-muted)] line-through">{{ product.compare_at_price }}</span>
-      </div>
-      <button v-if="product.availability_type!=='sold_out'" type="button" class="btn-primary w-full !py-2.5 text-xs" @click="add">{{ t('product.add_to_cart','أضف للسلة') }}</button>
-      <Link v-else :href="`/product/${product.slug}`" class="btn-secondary block w-full !py-2.5 text-center text-xs">{{ t('product.notify_me','نبّهني عند التوفر') }}</Link>
-    </div>
-  </article>
+    <article class="product-card group">
+        <Link :href="`/product/${product.slug}`" class="relative block">
+            <ProductImage
+                :src="product.image"
+                :alt="product.name_ar"
+                :category="categoryKey"
+                :sold-out="soldOut"
+            />
+            <div class="absolute start-2.5 top-2.5 z-10">
+                <StatusBadge :type="product.availability_type" :label="product.availability_label" />
+            </div>
+            <button
+                type="button"
+                class="absolute end-2.5 top-2.5 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-[var(--cocoa-500)] backdrop-blur-sm transition hover:text-[var(--pink-600)]"
+                :aria-label="t('product.favorite', 'المفضلة')"
+                @click.prevent
+            >
+                <Heart class="h-[18px] w-[18px]" :stroke-width="1.75" />
+            </button>
+        </Link>
+
+        <div class="space-y-2 px-2 pb-1 pt-2">
+            <Link
+                :href="`/product/${product.slug}`"
+                class="type-h3 line-clamp-2 !text-[15px] text-[var(--cocoa-900)]"
+            >
+                {{ product.name_ar }}
+            </Link>
+
+            <div v-if="product.avg_rating" class="flex items-center gap-1 text-[12px] font-semibold text-[var(--cocoa-500)]">
+                <Star class="h-3.5 w-3.5 fill-[var(--sun)] text-[var(--sun)]" :stroke-width="0" />
+                <span class="dir-ltr">{{ product.avg_rating }}</span>
+            </div>
+
+            <div class="flex items-center justify-between gap-2 pt-0.5">
+                <div class="min-w-0">
+                    <div class="type-price dir-ltr truncate">
+                        {{ product.base_price }}
+                        <span class="text-[13px]">{{ t('common.currency', 'ج.م') }}</span>
+                    </div>
+                    <div
+                        v-if="product.compare_at_price"
+                        class="dir-ltr text-[12px] text-[var(--cocoa-500)] line-through"
+                    >
+                        {{ product.compare_at_price }}
+                    </div>
+                </div>
+
+                <button
+                    v-if="!soldOut"
+                    type="button"
+                    class="btn-icon-add shrink-0"
+                    :aria-label="t('product.add_to_cart', 'أضف للسلة')"
+                    @click="add"
+                >
+                    <Plus class="h-5 w-5" :stroke-width="2.25" />
+                </button>
+                <Link
+                    v-else
+                    :href="`/product/${product.slug}`"
+                    class="shrink-0 rounded-full border border-[var(--pink-300)] px-3 py-2 text-[12px] font-bold text-[var(--pink-700)]"
+                >
+                    {{ t('product.notify_me', 'نبّهني') }}
+                </Link>
+            </div>
+        </div>
+    </article>
 </template>
