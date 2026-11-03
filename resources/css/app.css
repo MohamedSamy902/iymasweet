@@ -68,6 +68,12 @@
         scroll-behavior: smooth;
     }
 
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
     body {
         font-family: var(--font-body);
         background:
@@ -75,6 +81,7 @@
             radial-gradient(900px 500px at -10% 20%, color-mix(in srgb, var(--color-denim-soft) 70%, white), transparent 55%),
             var(--color-cream);
         color: var(--color-text);
+        min-height: 100dvh;
     }
 
     @media (prefers-reduced-motion: reduce) {

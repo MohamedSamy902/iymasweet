@@ -25,7 +25,7 @@ const navItems = computed(() => [
 </script>
 
 <template>
-    <div class="min-h-dvh pb-24 md:pb-0">
+    <div class="iyma-shell min-h-dvh pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">
         <div
             v-if="announcement.enabled && announcement.text"
             class="bg-[var(--color-primary)] px-4 py-2 text-center text-sm font-semibold text-white"
@@ -35,18 +35,18 @@ const navItems = computed(() => [
 
         <header class="sticky top-0 z-40 border-b border-[var(--color-primary-soft)]/70 bg-[var(--color-cream)]/90 backdrop-blur-md">
             <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-                <Link href="/" class="flex items-center gap-2">
+                <Link href="/" class="flex min-w-0 items-center gap-2">
                     <div
-                        class="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--color-primary-soft)] text-lg font-heading text-[var(--color-primary-dark)] shadow-sm animate-float"
+                        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-primary-soft)] text-lg font-heading text-[var(--color-primary-dark)] shadow-sm"
                     >
                         ✦
                     </div>
-                    <div class="leading-tight">
-                        <div class="font-heading text-xl text-[var(--color-brown)]">
+                    <div class="min-w-0 leading-tight">
+                        <div class="truncate font-heading text-xl text-[var(--color-brown)]">
                             {{ brand.name || 'Iyma Sweet' }}
                             <span v-if="showSparkles" class="sparkle text-sm">✦</span>
                         </div>
-                        <div class="text-xs text-[var(--color-text-muted)]">
+                        <div class="truncate text-xs text-[var(--color-text-muted)]">
                             {{ brand.tagline || 'Handmade with love' }}
                         </div>
                     </div>
@@ -64,7 +64,7 @@ const navItems = computed(() => [
                     </Link>
                 </div>
 
-                <div class="flex items-center gap-2">
+                <div class="flex shrink-0 items-center gap-2">
                     <Link
                         :href="`/locale/${locale === 'ar' ? 'en' : 'ar'}`"
                         class="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[var(--color-denim)] shadow-sm"
@@ -108,21 +108,24 @@ const navItems = computed(() => [
             </div>
         </footer>
 
-        <ChatWidget />
-
+        <!-- Mini cart: leave gap for chat FAB on the end side -->
         <div
             v-if="cartCount > 0"
-            class="fixed inset-x-3 bottom-[4.5rem] z-40 rounded-2xl bg-[var(--color-brown)] px-4 py-3 text-sm text-white shadow-lg md:hidden"
+            class="iyma-mini-cart fixed z-40 md:hidden"
         >
-            <Link href="/checkout" class="flex items-center justify-between font-semibold">
+            <Link
+                href="/checkout"
+                class="flex items-center justify-between gap-3 rounded-2xl bg-[var(--color-brown)] px-4 py-3 text-sm font-semibold text-white shadow-lg"
+            >
                 <span>{{ cartCount }} منتجات</span>
                 <span>{{ t('layout.cart_continue', 'كمّل الطلب') }}</span>
             </Link>
         </div>
 
-        <!-- Mobile bottom nav -->
+        <ChatWidget />
+
         <nav
-            class="fixed inset-x-0 bottom-0 z-50 border-t border-[var(--color-primary-soft)] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+            class="iyma-bottom-nav fixed inset-x-0 bottom-0 z-50 border-t border-[var(--color-primary-soft)] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
             aria-label="Bottom navigation"
         >
             <ul class="grid grid-cols-5">
@@ -132,10 +135,10 @@ const navItems = computed(() => [
                         class="relative flex flex-col items-center gap-1 px-1 py-2 text-[11px] font-semibold text-[var(--color-text-muted)]"
                     >
                         <component :is="item.icon" class="h-5 w-5" />
-                        <span>{{ item.label }}</span>
+                        <span class="truncate">{{ item.label }}</span>
                         <span
                             v-if="item.badge"
-                            class="absolute top-1 end-3 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[10px] text-white"
+                            class="absolute top-1 end-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[10px] text-white"
                         >
                             {{ item.badge }}
                         </span>
@@ -145,3 +148,17 @@ const navItems = computed(() => [
         </nav>
     </div>
 </template>
+
+<style scoped>
+.iyma-mini-cart {
+    inset-inline-start: 0.75rem;
+    inset-inline-end: 5rem; /* room for chat FAB */
+    bottom: calc(4.35rem + env(safe-area-inset-bottom, 0px));
+}
+
+:global(html.iyma-chat-open) .iyma-mini-cart,
+:global(html.iyma-chat-open) .iyma-bottom-nav {
+    visibility: hidden;
+    pointer-events: none;
+}
+</style>
