@@ -148,7 +148,7 @@ const notify = () => {
             </div>
         </div>
 
-        <div class="mt-10 flex gap-3 overflow-x-auto border-b border-black/5">
+        <div class="mt-10 h-scroll gap-3 border-b border-black/5">
             <button
                 v-for="key in ['description','ingredients','allergens','storage','reviews']"
                 :key="key"

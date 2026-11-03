@@ -19,7 +19,7 @@ const updateFilter = (key, value) => {
     <div class="mx-auto max-w-6xl px-4 py-6">
         <h1 class="font-heading text-3xl text-[var(--color-brown)]">{{ category?.name_ar || t('shop.title') }}</h1>
 
-        <div class="mt-4 flex gap-2 overflow-x-auto pb-2">
+        <div class="mt-4 h-scroll pb-2">
             <button class="chip" :class="{ 'chip-active': !filters.availability }" @click="updateFilter('availability', null)">الكل</button>
             <button class="chip" :class="{ 'chip-active': filters.availability==='available_now' }" @click="updateFilter('availability','available_now')">{{ t('home.status_available_now') }}</button>
             <button class="chip" :class="{ 'chip-active': filters.availability==='available_tomorrow' }" @click="updateFilter('availability','available_tomorrow')">{{ t('home.status_tomorrow') }}</button>
@@ -38,7 +38,7 @@ const updateFilter = (key, value) => {
             </select>
         </div>
 
-        <div class="mt-4 flex gap-2 overflow-x-auto">
+        <div class="mt-4 h-scroll">
             <Link v-for="c in categories" :key="c.id" :href="`/category/${c.slug}`" class="chip whitespace-nowrap">{{ c.name_ar }}</Link>
         </div>
 

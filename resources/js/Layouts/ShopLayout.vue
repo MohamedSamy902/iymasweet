@@ -31,7 +31,7 @@ const navItems = computed(() => [
 </script>
 
 <template>
-    <div class="iyma-shell min-h-dvh pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">
+    <div class="iyma-shell min-h-dvh w-full max-w-[100vw] overflow-x-clip pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0">
         <div
             v-if="announcement.enabled && announcement.text"
             class="bg-[var(--color-primary)] px-4 py-2 text-center text-sm font-semibold text-white"
@@ -201,7 +201,7 @@ const navItems = computed(() => [
 }
 
 .iyma-wa-fab {
-    inset-inline-end: 1rem;
+    inset-inline-end: max(0.75rem, env(safe-area-inset-inline-end, 0px));
     bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px));
 }
 

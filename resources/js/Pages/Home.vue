@@ -60,7 +60,7 @@ const tabs = computed(() => [
 
     <div class="mx-auto max-w-6xl space-y-14 px-4 py-10">
         <section class="space-y-4">
-            <div class="flex gap-2 overflow-x-auto pb-1">
+            <div class="h-scroll">
                 <button
                     v-for="tab in tabs"
                     :key="tab.key"

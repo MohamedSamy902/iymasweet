@@ -52,7 +52,7 @@ const isVideo = computed(() => (current.value?.type || 'image') === 'video');
             </span>
         </div>
 
-        <div v-if="items.length > 1" class="flex gap-2 overflow-x-auto pb-1">
+        <div v-if="items.length > 1" class="h-scroll">
             <button
                 v-for="(item, index) in items"
                 :key="`${item.path}-${index}`"
